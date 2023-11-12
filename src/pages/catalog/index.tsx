@@ -13,10 +13,10 @@ export async function getServerSideProps() {
             }
         }
     }
-    const mangas = await fetch(host + "/catalog").then(res => res.json())
+    const mangas = await fetch(host + "/api/catalog").then(res => res.json())
     return {
         props: {
-            catalog: mangas
+            catalog: mangas || []
         }
     }
 }
