@@ -6,3 +6,8 @@ export interface MangaResponse {
     chapterNumber: number
 }
 
+export interface CreateManga {
+    title: string
+    description: string
+    cover: string
+}

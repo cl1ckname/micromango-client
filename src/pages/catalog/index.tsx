@@ -24,6 +24,7 @@ export async function getServerSideProps() {
 export default function Home(props: HomeProps) {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
+            <a href="/catalog/add">Add manga</a>
             <ul>
                 {props.catalog.map((e, i) => <li key={i}>{e.title} - {e.description}</li>)}
             </ul>
