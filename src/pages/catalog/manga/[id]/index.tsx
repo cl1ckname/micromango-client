@@ -1,19 +1,34 @@
-import {useRouter} from "next/router";
 import {GetServerSidePropsContext} from "next";
+import {MangaResponse} from "@/dto/catalog";
+import {notFound} from "next/navigation";
 
-
+interface MangaPreviewProps {
+    mangaPreview: MangaResponse
+}
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { id } = context.query;
     const host =  process.env["SERVER_ADDR"]
     const res = await fetch(host + "/api/catalog/" + id);
-    const mangaPreview = await res.json();
+    if (res.status == 404) {
+        return notFound()
+    }
+    if (!res.ok) {
+        console.error(await res.json())
+        return
+    }
+    const mangaPreview = await res.json() as MangaResponse;
     return { props: { mangaPreview } };
 }
-export default function MangaPreview() {
-    const router = useRouter()
-    const mangaId = router.query.id
-    if (!mangaId) {
-        throw "error"
-    }
-
+export default function MangaPreview(props: MangaPreviewProps) {
+    const chapters = props.mangaPreview.content.chapters || []
+    return <>
+        <a href="/catalog">To catalog</a>
+        <h1>{props.mangaPreview.title}</h1>
+        <img src={props.mangaPreview.cover} alt={props.mangaPreview.cover}/>
+        <q>{props.mangaPreview.description}</q>
+        <h2>There is {chapters.length} chapters already!</h2>
+        <ol>
+            {chapters.map(c => <li>{c.title}</li>)}
+        </ol>
+    </>
 }

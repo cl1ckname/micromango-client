@@ -1,4 +1,7 @@
 import {FormEvent, useState} from "react";
+import {redirect} from "next/navigation";
+import {MangaResponse} from "@/dto/catalog";
+import {useRouter} from "next/router";
 
 interface AddMangaProps {
     host: string
@@ -15,10 +18,10 @@ export const getStaticProps = (_: any) => {
 export default function AddManga(props: AddMangaProps) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-
+    const router = useRouter()
     const createManga = async (e: FormEvent) => {
         e.preventDefault()
-        await fetch(props.host + "/api/catalog", {
+        const res = await fetch(props.host + "/api/catalog", {
             method: "POST",
             headers: new Headers({
                 "content-type": "application/json"
@@ -26,6 +29,12 @@ export default function AddManga(props: AddMangaProps) {
             mode: "cors",
             body: JSON.stringify({title, description})
         })
+        if (!res.ok) {
+            console.error(await res.json())
+            return
+        }
+        const createdManga = await res.json() as MangaResponse
+        return router.replace("/catalog/manga/" + createdManga.mangaId)
     }
 
     return <>
