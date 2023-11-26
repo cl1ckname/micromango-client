@@ -24,7 +24,7 @@ export default function MangaPreview(props: MangaPreviewProps) {
     return <>
         <a href="/catalog">To catalog</a>
         <h1>{props.mangaPreview.title}</h1>
-        <img src={props.mangaPreview.cover} alt={props.mangaPreview.cover}/>
+        <img src={props.mangaPreview.cover} alt={props.mangaPreview.cover} width="480" height="480"/>
         <q>{props.mangaPreview.description}</q>
         <h2>There is {chapters.length} chapters already!</h2>
         <ol>

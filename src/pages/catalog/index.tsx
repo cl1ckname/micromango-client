@@ -33,7 +33,14 @@ export default function Home(props: HomeProps) {
             <ul>
                 {props.catalog.map((e, i) =>
                     <li key={i}>
-                        <a href={"catalog/manga/" + e.mangaId}><img alt={e.cover} src={e.cover}/>{e.title}</a>
+                        <a href={"catalog/manga/" + e.mangaId}>
+                            <img
+                                alt={e.cover}
+                                src={e.cover}
+                                width="240"
+                                height="360"
+                            />{e.title}
+                        </a>
                     </li>)}
             </ul>
         </main>
