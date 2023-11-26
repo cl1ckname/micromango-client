@@ -3,8 +3,9 @@ import {MangaPreviewResponse, MangaResponse} from "@/dto/catalog";
 interface HomeProps {
     catalog: MangaPreviewResponse[]
 }
+
 export async function getServerSideProps() {
-    const host =  process.env["SERVER_ADDR"]
+    const host = process.env["SERVER_ADDR"]
     if (!host) {
         console.warn("invalid host: " + host)
         return {
@@ -28,21 +29,39 @@ export async function getServerSideProps() {
 
 export default function Home(props: HomeProps) {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main className="min-h-screen">
             <a href="/catalog/add">Add manga</a>
-            <ul>
-                {props.catalog.map((e, i) =>
-                    <li key={i}>
-                        <a href={"catalog/manga/" + e.mangaId}>
-                            <img
-                                alt={e.cover}
-                                src={e.cover}
-                                width="240"
-                                height="360"
-                            />{e.title}
-                        </a>
-                    </li>)}
-            </ul>
+            <div className="flex flex-row">
+                {
+                    props.catalog.map((e, i) =>
+                        // <div key={i}>
+                        //     <a href={"catalog/manga/" + e.mangaId}>
+                        //         <img
+                        //             alt={e.cover}
+                        //             src={e.cover}
+                        //             width="240"
+                        //             height="360"
+                        //         />{e.title}
+                        //     </a>
+                        // </div>
+                        MangaPreviewCard(e)
+                    )
+                }
+            </div>
         </main>
     )
+}
+
+function MangaPreviewCard(props: MangaPreviewResponse) {
+    return <div
+        className="relative m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+        <a className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href={"catalog/manga/" + props.mangaId}>
+            <img className="object-cover" src={props.cover} alt="product image"/>
+        </a>
+        <div className="mt-4 px-5 pb-5">
+            <a href={"catalog/manga/" + props.mangaId}>
+                <h5 className="text-xl tracking-tight text-slate-900">{props.title}</h5>
+            </a>
+        </div>
+    </div>
 }
