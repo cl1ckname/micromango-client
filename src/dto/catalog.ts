@@ -4,6 +4,7 @@ export interface MangaResponse {
     cover: string
     description: string
     content: MangaContentResponse
+    createdAt: string
 }
 
 export interface MangaPreviewResponse {
@@ -21,6 +22,7 @@ export interface ChapterHead {
     chapterId: string
     number: number
     title: string
+    createdAt: string
 }
 
 export interface Chapter {
@@ -29,6 +31,7 @@ export interface Chapter {
     number: number
     title: string
     pages: PageHead[]
+    createdAt: string
 }
 
 export interface PageHead {

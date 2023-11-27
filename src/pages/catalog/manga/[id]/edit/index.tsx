@@ -20,7 +20,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function EditManga(props: MangaResponse) {
-    const [chapters, setChapters] = useState<ChapterHead[]>(props.content.chapters)
+    const [chapters, setChapters] = useState<ChapterHead[]>(props.content.chapters || [])
     const [chapterName, setChapterName] = useState("")
     const [title, setTitle] = useState(props.title)
     const [description, setDescription] = useState(props.description)
