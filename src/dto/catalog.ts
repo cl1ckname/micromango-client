@@ -23,6 +23,13 @@ export interface ChapterHead {
     title: string
 }
 
+export interface Chapter {
+    chapterId:     string
+    mangaId:       string
+    chapterNumber: number
+    title:         string
+    pages:         any[]
+}
 export interface CreateManga {
     title: string
     description: string

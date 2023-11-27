@@ -33,19 +33,7 @@ export default function Home(props: HomeProps) {
             <a href="/catalog/add">Add manga</a>
             <div className="flex flex-row">
                 {
-                    props.catalog.map((e, i) =>
-                        // <div key={i}>
-                        //     <a href={"catalog/manga/" + e.mangaId}>
-                        //         <img
-                        //             alt={e.cover}
-                        //             src={e.cover}
-                        //             width="240"
-                        //             height="360"
-                        //         />{e.title}
-                        //     </a>
-                        // </div>
-                        MangaPreviewCard(e)
-                    )
+                    props.catalog.map(MangaPreviewCard)
                 }
             </div>
         </main>
