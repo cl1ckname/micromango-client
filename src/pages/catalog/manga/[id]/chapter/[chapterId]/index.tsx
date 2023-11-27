@@ -23,38 +23,56 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 export default function ChapterView(props: Chapter) {
     const router = useRouter()
-    const {id, chapterId } = router.query
 
     const [page, setPage] = useState(1)
-    const pages = props.pages || []
+    const pages = props.pages.sort((a,b) => a.number - b.number) || []
     useEffect(() => {
         const pageNumberStr = router.query["page"] as string
         const pageNumber = Number.parseInt(pageNumberStr)
         if (!pageNumber) {
             router.query["page"] = "1"
-            router.push(router)
+            router.push({
+                pathname: router.pathname,
+                query: {
+                    ...router.query
+                }
+            })
         }
         if (pageNumber > pages.length) {
             router.query["page"] = "1"
-            router.push(router)
+            router.push({
+                pathname: router.pathname,
+                query: {
+                    ...router.query
+                }
+            })
         }
         setPage(pageNumber)
     }, [router, page]);
 
-    async function addPage() {
-        fetch(`${HOST}/api/content/${id}/chapter/${chapterId}/page`, {
-            method: "POST",
-            body: JSON.stringify({
-                chapterId: props.chapterId,
-                number: pages.length + 1
-            })
+    useEffect(() => {
+        document.addEventListener("keydown", e => {
+            if (e.key === "ArrowRight") {
+                router.query["page"] = page + 1 + ""
+                router.push({
+                    pathname: router.pathname,
+                    query: {
+                        ...router.query
+                    }
+                }, undefined, {shallow: true})
+            } else if (e.key === "ArrowLeft") {
+                router.query["page"] = page - 1 + ""
+                router.push({
+                    pathname: router.pathname,
+                    query: {
+                        ...router.query
+                    },
+                }, undefined, {shallow: true})
+            }
         })
-    }
-
+    }, [page]);
     return <>
-        {(pages.length) ? <button>Next page</button> : <button>Add first page</button>}<br/>
-        {props.title}<br/>
-        {JSON.stringify(props)}<br/>
-        {page}
+        <h1>Chapter {props.number} - page {pages[page-1]?.number}</h1>
+        <img src={pages[page - 1]?.image} width="1500"/>
         </>
 }
