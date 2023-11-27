@@ -19,14 +19,14 @@ export interface MangaContentResponse {
 
 export interface ChapterHead {
     chapterId: string
-    chapterNumber: number
+    number: number
     title: string
 }
 
 export interface Chapter {
     chapterId:     string
     mangaId:       string
-    chapterNumber: number
+    number: number
     title:         string
     pages:         any[]
 }

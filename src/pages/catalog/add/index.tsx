@@ -1,21 +1,9 @@
 import {FormEvent, useState} from "react";
 import {MangaResponse} from "@/dto/catalog";
 import {useRouter} from "next/router";
+import {HOST} from "@/app/globals";
 
-interface AddMangaProps {
-    host: string
-}
-
-export const getStaticProps = (_: any) => {
-    const host = process.env["SERVER_ADDR"]
-    if (!host) {
-        console.warn("invalid host: " + host)
-    }
-    return {
-        props: {host}
-    }
-}
-export default function AddManga(props: AddMangaProps) {
+export default function AddManga() {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [cover, setCover] = useState<File | null>(null)
@@ -29,7 +17,7 @@ export default function AddManga(props: AddMangaProps) {
             console.log("there is file!!")
             formData.append("cover", cover, cover.name)
         }
-        const res = await fetch(props.host + "/api/catalog", {
+        const res = await fetch(HOST + "/api/catalog", {
             method: "POST",
             mode: "cors",
             body: formData

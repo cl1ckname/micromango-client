@@ -31,7 +31,7 @@ export default function MangaPreview(props: MangaPreviewProps) {
         e.stopPropagation()
         const resp = await fetch(HOST + "/api/content/" + props.mangaPreview.mangaId + "/chapter", {
             method: "POST",
-            body: JSON.stringify({title: chapterName}),
+            body: JSON.stringify({title: chapterName, number: chapters.length + 1}),
             headers: new Headers({
                 "Content-Type": "application/json"
             })
@@ -43,7 +43,7 @@ export default function MangaPreview(props: MangaPreviewProps) {
         setChapters(prev => prev.concat([{
             title: respData.title,
             chapterId: respData.chapterId,
-            chapterNumber: respData.chapterNumber
+            number: respData.number
         }]))
         setChapterName("")
     }
@@ -100,9 +100,9 @@ export default function MangaPreview(props: MangaPreviewProps) {
                             </thead>
 
                             <tbody>
-                            {chapters.map(c => <tr>
+                            {chapters.sort((a,b) => b.number - a.number).map(c => <tr>
                                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-1 text-left text-blueGray-700 ">
-                                    {c.chapterNumber}
+                                    {c.number}
                                 </th>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-1 ">
                                     {c.title}

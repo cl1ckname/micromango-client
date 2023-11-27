@@ -1,20 +1,12 @@
 import {MangaPreviewResponse, MangaResponse} from "@/dto/catalog";
+import {HOST} from "@/app/globals";
 
 interface HomeProps {
     catalog: MangaPreviewResponse[]
 }
 
 export async function getServerSideProps() {
-    const host = process.env["SERVER_ADDR"]
-    if (!host) {
-        console.warn("invalid host: " + host)
-        return {
-            props: {
-                catalog: []
-            }
-        }
-    }
-    const response = await fetch(host + "/api/catalog")
+    const response = await fetch(HOST + "/api/catalog")
     if (!response.ok) {
         console.error(await response.json())
         throw "Invalid response code: " + response.status
