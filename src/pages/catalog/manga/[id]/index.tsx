@@ -75,7 +75,7 @@ export default function MangaPreview(props: MangaPreviewProps) {
                                         {c.number}
                                     </th>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-1 ">
-                                        <a href={`/catalog/manga/${props.mangaPreview.mangaId}/chapter/${c.chapterId}`}>
+                                        <a href={`/catalog/manga/${props.mangaPreview.mangaId}/read?chapter=${c.number}`}>
                                             {c.title}
                                         </a>
                                     </td>
