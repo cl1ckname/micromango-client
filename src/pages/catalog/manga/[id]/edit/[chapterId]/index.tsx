@@ -25,9 +25,9 @@ export default function EditChapter(props: Chapter) {
     const [file, setFile] = useState<File | null>(null)
     const [pages, setPages] = useState(props.pages || [])
     async function AddPage() {
-        console.log(file, pages.length)
         const formData = new FormData()
         formData.append("number", pages.length + 1 + "")
+        formData.append("mangaId", props.mangaId)
         if (file) {
             formData.append("image", file, file.name)
         }

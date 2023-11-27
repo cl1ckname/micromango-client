@@ -45,25 +45,10 @@ export default function EditManga(props: MangaResponse) {
         setChapters(prev => prev.concat([{
             title: respData.title,
             chapterId: respData.chapterId,
-            number: respData.number
+            number: respData.number,
+            createdAt: respData.createdAt
         }]))
         setChapterName("")
-    }
-
-    async function uploadChapter(chapterId: string) {
-        const resp = await fetch(`${HOST}/api/content/${props.mangaId}/chapter/${chapterId}`)
-        if (resp.status == 404) {
-            return notFound()
-        }
-        if (!resp.ok) {
-            throw await resp.json()
-        }
-        const respData = await resp.json() as Chapter
-        setUploadedChapters(prev => {
-            const newChapter: Record<string, Chapter> = {}
-            newChapter[chapterId] = respData
-            return Object.assign(newChapter, uploadedChapters)
-        })
     }
 
     return <>
