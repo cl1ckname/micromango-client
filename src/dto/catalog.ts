@@ -24,17 +24,20 @@ export interface ChapterHead {
 }
 
 export interface Chapter {
-    chapterId:     string
-    mangaId:       string
+    chapterId: string
+    mangaId: string
     number: number
-    title:         string
-    pages:         any[]
+    title: string
+    pages: PageHead[]
 }
 
 export interface PageHead {
     pageId: string
+    number: number
+    image: string
 
 }
+
 export interface CreateManga {
     title: string
     description: string

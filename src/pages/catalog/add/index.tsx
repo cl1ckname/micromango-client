@@ -14,7 +14,6 @@ export default function AddManga() {
         formData.append("title", title)
         formData.append("description", description)
         if (cover) {
-            console.log("there is file!!")
             formData.append("cover", cover, cover.name)
         }
         const res = await fetch(HOST + "/api/catalog", {
