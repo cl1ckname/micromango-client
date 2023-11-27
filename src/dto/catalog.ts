@@ -30,6 +30,11 @@ export interface Chapter {
     title:         string
     pages:         any[]
 }
+
+export interface PageHead {
+    pageId: string
+
+}
 export interface CreateManga {
     title: string
     description: string

@@ -11,8 +11,9 @@ interface MangaPreviewProps {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
     const res = await fetch(HOST + "/api/catalog/" + id);
+    console.log(res.status)
     if (res.status == 404) {
-        return notFound()
+        return {notFound: true}
     }
     if (!res.ok) {
         console.error(await res.json())
@@ -36,6 +37,9 @@ export default function MangaPreview(props: MangaPreviewProps) {
                 "Content-Type": "application/json"
             })
         })
+        if (resp.status == 404) {
+            return notFound()
+        }
         if (!resp.ok) {
             throw await resp.json()
         }
