@@ -4,6 +4,7 @@ import {HOST} from "@/app/globals";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {notFound} from "next/navigation";
+import ReadingLayout from "@/pages/catalog/manga/[id]/read/layout";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id, chapter} = context.query;
@@ -25,6 +26,37 @@ export default function MangaView(props: MangaContentResponse) {
     const router = useRouter()
     const [page, setPage] = useState(1)
     const [chapter, setChapter] = useState<Chapter>()
+
+    function nextPage() {
+        router.query["page"] = page + 1 + ""
+        return router.push({
+            pathname: router.pathname,
+            query: {
+                ...router.query
+            }
+        }, undefined, {shallow: true})
+    }
+
+    function previousPage() {
+        router.query["page"] = page - 1 + ""
+        return router.push({
+            pathname: router.pathname,
+            query: {
+                ...router.query
+            },
+        }, undefined, {shallow: true})
+    }
+
+    function setPageAndChapter(chapterNumber: number, pageNumber: number) {
+        router.query["page"] = pageNumber + ""
+        router.query["chapter"] = chapterNumber + ""
+        return router.push({
+            pathname: router.pathname,
+            query: {
+                ...router.query
+            }
+        })
+    }
 
     useEffect( () => {
         const chapterNumberStr = router.query["chapter"] as string
@@ -60,55 +92,29 @@ export default function MangaView(props: MangaContentResponse) {
         if (!chapter) {
             return
         }
-        const pageNumberStr = router.query["page"] as string
-        if (!pageNumberStr) {
-            router.query["page"] = "1"
-            router.push({
-                pathname: router.pathname,
-                query: {
-                    ...router.query
-                }
-            })
-        }
-        const pageNumber = Number.parseInt(pageNumberStr)
         let chapterNumberStr = router.query["chapter"] as string
         if (!chapterNumberStr) {
             chapterNumberStr = "1"
         }
         const chapterNumber = Number.parseInt(chapterNumberStr)
+        const pageNumberStr = router.query["page"] as string
+        if (!pageNumberStr) {
+            setPageAndChapter(chapterNumber, 1)
+        }
+        const pageNumber = Number.parseInt(pageNumberStr)
         if (pageNumber > chapter.pages.length) {
             if (props.chapters.length > chapterNumber) {
-                router.query["page"] = "1"
-                router.query["chapter"] = chapterNumber + 1 + ""
-                router.push({
-                    pathname: router.pathname,
-                    query: {
-                        ...router.query
-                    }
-                })
+                setPageAndChapter(chapterNumber + 1, 1)
             } else {
                 router.push(`/catalog/manga/${props.mangaId}`)
             }
         }
         if (pageNumber <= 0) {
             if (pageNumber < 0) {
-                router.query["page"] = chapter.pages.length + ""
-                router.push({
-                    pathname: router.pathname,
-                    query: {
-                        ...router.query
-                    }
-                })
+                setPageAndChapter(chapterNumber, chapter.pages.length)
             }
             if (chapterNumber > 1) {
-                router.query["page"] = "-1"
-                router.query["chapter"] = chapterNumber - 1 + ""
-                router.push({
-                    pathname: router.pathname,
-                    query: {
-                        ...router.query
-                    }
-                })
+                setPageAndChapter(chapterNumber -1, -1)
             } else {
                 router.push(`/catalog/manga/${props.mangaId}`)
             }
@@ -118,21 +124,9 @@ export default function MangaView(props: MangaContentResponse) {
 
     async function keyboardHandler(e: KeyboardEvent) {
         if (e.key === "ArrowRight") {
-            router.query["page"] = page + 1 + ""
-            await router.push({
-                pathname: router.pathname,
-                query: {
-                    ...router.query
-                }
-            }, undefined, {shallow: true})
+            await nextPage()
         } else if (e.key === "ArrowLeft") {
-            router.query["page"] = page - 1 + ""
-            await router.push({
-                pathname: router.pathname,
-                query: {
-                    ...router.query
-                },
-            }, undefined, {shallow: true})
+            await previousPage()
         }
     }
 
@@ -142,8 +136,19 @@ export default function MangaView(props: MangaContentResponse) {
             document.removeEventListener("keydown", keyboardHandler)
         }
     }, [page])
+
+    if (!chapter) {
+        return "loading"
+    }
+
     return <>
-        <h1>Chapter {chapter?.number} - page {chapter?.pages[page-1]?.number}</h1>
+        <ReadingLayout
+            page={page}
+            chapter={chapter.number}
+            mangaId={chapter.mangaId}
+            onNextPage={nextPage}
+            onPreviousPage={previousPage}
+        />
         <img
             alt={"not found"}
             src={chapter?.pages[page - 1]?.image}

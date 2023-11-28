@@ -94,11 +94,12 @@ export default function MangaPreview(props: MangaResponse) {
         <div className="flex justify-items-center w-full">
             <div className="">
                 <img src={props.cover} alt={props.cover} width="240" height="320"/>
-                <button
-                    className="bg-indigo-500 text-white active:bg-indigo-600 text-m font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full mt-1"
-                    type="button"
-                >Start reading
-                </button>
+                <a href={`/catalog/manga/${props.mangaId}/read?chapter=1&page=1`}>
+                    <button
+                        className="bg-indigo-500 text-white active:bg-indigo-600 text-m font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full mt-1"
+                        type="button" >Start reading
+                    </button>
+                </a>
                 <p className="mt-1 text-base md:max-w-xs">{props.description}</p>
                 <h2>There is {chapters.length} chapters already!</h2>
                 <a href={`/catalog/manga/${props.mangaId}/edit`}>Edit</a>

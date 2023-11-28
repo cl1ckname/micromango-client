@@ -1,7 +1,12 @@
 import type {AppProps} from 'next/app'
 import "../app/globals.css"
+import {useRouter} from "next/router";
 
 export default function MyApp({Component, pageProps}: AppProps) {
+    const router = useRouter()
+    if (router.pathname.includes("read")) {
+        return <Component {...pageProps} />
+    }
     return <>
        <Navbar/>
         <Component {...pageProps} />
