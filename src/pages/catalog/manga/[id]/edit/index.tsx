@@ -3,6 +3,8 @@ import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
 import {FormEvent, useState} from "react";
 import {notFound} from "next/navigation";
+import {router} from "next/navigation";
+import {useRouter} from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
@@ -24,6 +26,7 @@ export default function EditManga(props: MangaResponse) {
     const [chapterName, setChapterName] = useState("")
     const [title, setTitle] = useState(props.title)
     const [description, setDescription] = useState(props.description)
+    const router = useRouter()
     async function addChapter(e: FormEvent) {
         e.preventDefault()
         e.stopPropagation()
@@ -64,6 +67,17 @@ export default function EditManga(props: MangaResponse) {
         }
     }
 
+    async function deleteManga(e: FormEvent) {
+        e.preventDefault()
+        const res = await fetch(`${HOST}/api/catalog/${props.mangaId}`, {
+            method: "DELETE",
+        })
+        if (!res.ok) {
+            throw await res.json()
+        }
+        await router.push("/catalog")
+    }
+
     return <>
         <div className="bg-gray-100 flex justify-center items-center h-screen">
             <div className="w-1/2 h-screen hidden lg:block">
@@ -94,6 +108,9 @@ export default function EditManga(props: MangaResponse) {
                     </div>
                     <button onClick={updatePreview}
                             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Update
+                    </button>
+                    <button onClick={deleteManga}
+                            className="bg-red-700 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Delete
                     </button>
                 </form>
             </div>
