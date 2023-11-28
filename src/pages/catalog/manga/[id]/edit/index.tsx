@@ -24,7 +24,6 @@ export default function EditManga(props: MangaResponse) {
     const [chapterName, setChapterName] = useState("")
     const [title, setTitle] = useState(props.title)
     const [description, setDescription] = useState(props.description)
-    const [uploadedChapters, setUploadedChapters] = useState<Record<string, Chapter>>({})
     async function addChapter(e: FormEvent) {
         e.preventDefault()
         e.stopPropagation()
@@ -51,6 +50,20 @@ export default function EditManga(props: MangaResponse) {
         setChapterName("")
     }
 
+    async function updatePreview(e: FormEvent) {
+        e.preventDefault()
+        const formData = new FormData()
+        formData.append("title", title)
+        formData.append("description", description)
+        const res = await fetch(`${HOST}/api/catalog/${props.mangaId}`, {
+            method: "PUT",
+            body: formData
+        })
+        if (!res.ok) {
+            throw await res.json()
+        }
+    }
+
     return <>
         <div className="bg-gray-100 flex justify-center items-center h-screen">
             <div className="w-1/2 h-screen hidden lg:block">
@@ -63,7 +76,7 @@ export default function EditManga(props: MangaResponse) {
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                 />
-                <form action="#" method="POST">
+                <form method="POST">
                     <div className="mb-4">
                         <label htmlFor="username" className="block text-gray-600">Description</label>
                         <textarea
@@ -79,7 +92,7 @@ export default function EditManga(props: MangaResponse) {
                         <input type="checkbox" id="remember" name="remember" className="text-blue-500"/>
                         <label htmlFor="remember" className="text-gray-600 ml-2">Publish</label>
                     </div>
-                    <button type="submit"
+                    <button onClick={updatePreview}
                             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Update
                     </button>
                 </form>
