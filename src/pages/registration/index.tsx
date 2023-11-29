@@ -1,11 +1,12 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {HOST} from "@/app/globals";
+import {useRouter} from "next/router";
 
 export default function Registration() {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
+    const router = useRouter()
     function handleUsername(e: ChangeEvent<HTMLInputElement>) {
         setUsername(e.target.value)
     }
@@ -30,7 +31,7 @@ export default function Registration() {
         if (!res.ok) {
             throw body
         }
-
+        await router.push("/login")
     }
 
 
