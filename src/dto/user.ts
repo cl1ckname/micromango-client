@@ -1,6 +1,11 @@
 export interface LoginResponse {
-    AccessToken:         string,
-    AccessTokenExpired:  string,
-    RefreshToken:        string,
-    RefreshTokenExpired: string,
+    accessToken:         string,
+    accessTokenExpired:  string,
+    refreshToken:        string,
+    refreshTokenExpired: string,
+}
+
+export interface Auth {
+    userId: string,
+    username: string
 }
