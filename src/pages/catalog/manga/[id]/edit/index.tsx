@@ -3,7 +3,6 @@ import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
 import {FormEvent, useState} from "react";
 import {notFound} from "next/navigation";
-import {router} from "next/navigation";
 import {useRouter} from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
