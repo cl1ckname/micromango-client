@@ -1,6 +1,8 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {HOST} from "@/app/globals";
 import {useRouter} from "next/router";
+import {fetchJson} from "@/common/fetch";
+import {LoginDto, LoginResponse} from "@/dto/user";
 
 export default function Login() {
     const [email, setEmail] = useState("")
@@ -16,20 +18,10 @@ export default function Login() {
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        const res = await fetch(`${HOST}/api/user/login`, {
-            method: "POST",
-            headers: new Headers({
-                "Content-Type": "application/json"
-            }),
-            body: JSON.stringify({
-                email, password
-            })
+        const res = await fetchJson<LoginDto, LoginResponse>(`${HOST}/api/user/login`, "POST", {
+            email, password
         })
-        const body = await res.json()
-        if (!res.ok) {
-            throw body
-        }
-        localStorage.setItem("auth", JSON.stringify(body))
+        localStorage.setItem("auth", JSON.stringify(res))
         await router.push("/")
     }
 

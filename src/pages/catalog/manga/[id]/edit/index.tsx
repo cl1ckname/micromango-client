@@ -1,23 +1,17 @@
-import {Chapter, ChapterHead, MangaResponse} from "@/dto/catalog";
+import {Chapter, ChapterHead, MangaResponse, PostChapter} from "@/dto/catalog";
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
 import {FormEvent, useState} from "react";
-import {notFound} from "next/navigation";
 import {useRouter} from "next/router";
+import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
-    const res = await fetch(HOST + "/api/catalog/" + id);
-    console.log(res.status)
-    if (res.status == 404) {
+    const res = await fetchOr404<MangaResponse>(HOST + "/api/catalog/" + id);
+    if (!res) {
         return {notFound: true}
     }
-    if (!res.ok) {
-        console.error(await res.json())
-        return
-    }
-    const mangaPreview = await res.json() as MangaResponse;
-    return {props: mangaPreview};
+    return {props: res};
 }
 
 export default function EditManga(props: MangaResponse) {
@@ -29,25 +23,16 @@ export default function EditManga(props: MangaResponse) {
     async function addChapter(e: FormEvent) {
         e.preventDefault()
         e.stopPropagation()
-        const resp = await fetch(HOST + "/api/content/" + props.mangaId + "/chapter", {
-            method: "POST",
-            body: JSON.stringify({title: chapterName, number: chapters.length + 1}),
-            headers: new Headers({
-                "Content-Type": "application/json"
-            })
-        })
-        if (resp.status == 404) {
-            return notFound()
-        }
-        if (!resp.ok) {
-            throw await resp.json()
-        }
-        const respData = await resp.json() as Chapter
+        const resp = await fetchJson<PostChapter, Chapter>(
+            HOST + "/api/content/" + props.mangaId + "/chapter",
+            "POST",
+            {title: chapterName, number: chapters.length + 1}
+        )
         setChapters(prev => prev.concat([{
-            title: respData.title,
-            chapterId: respData.chapterId,
-            number: respData.number,
-            createdAt: respData.createdAt
+            title: resp.title,
+            chapterId: resp.chapterId,
+            number: resp.number,
+            createdAt: resp.createdAt
         }]))
         setChapterName("")
     }
@@ -57,23 +42,12 @@ export default function EditManga(props: MangaResponse) {
         const formData = new FormData()
         formData.append("title", title)
         formData.append("description", description)
-        const res = await fetch(`${HOST}/api/catalog/${props.mangaId}`, {
-            method: "PUT",
-            body: formData
-        })
-        if (!res.ok) {
-            throw await res.json()
-        }
+        return fetchFormData(`${HOST}/api/catalog/${props.mangaId}`, "PUT", formData)
     }
 
     async function deleteManga(e: FormEvent) {
         e.preventDefault()
-        const res = await fetch(`${HOST}/api/catalog/${props.mangaId}`, {
-            method: "DELETE",
-        })
-        if (!res.ok) {
-            throw await res.json()
-        }
+        await fetchJson(`${HOST}/api/catalog/${props.mangaId}`, "PUT")
         await router.push("/catalog")
     }
 

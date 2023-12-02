@@ -1,24 +1,21 @@
-import {Chapter} from "@/dto/catalog";
+import {Chapter, PageHead, PutChapter} from "@/dto/catalog";
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
 import {ChangeEvent, MouseEventHandler, useState} from "react";
 import {notFound} from "next/navigation";
+import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id, chapterId} = context.query;
     if (!id || !chapterId) {
         throw "invalid path"
     }
-    const chapterRes = await fetch(`${HOST}/api/content/${id}/chapter/${chapterId}`)
-    console.log(chapterRes.status)
-    if (chapterRes.status == 404) {
+    const chapterRes = await fetchOr404<Chapter>(`${HOST}/api/content/${id}/chapter/${chapterId}`)
+    if (!chapterRes) {
         return {notFound: true}
     }
-    if (!chapterRes.ok) {
-        throw await chapterRes.json()
-    }
     return {
-        props: await chapterRes.json()
+        props: chapterRes
     }
 }
 export default function EditChapter(props: Chapter) {
@@ -32,37 +29,23 @@ export default function EditChapter(props: Chapter) {
         if (file) {
             formData.append("image", file, file.name)
         }
-        const res = await fetch(`${HOST}/api/content/${props.mangaId}/chapter/${props.chapterId}/page`, {
-            method: "POST",
-            body: formData
-        })
-        if (res.status == 404) {
+        const res = await fetchFormData<PageHead>(
+            `${HOST}/api/content/${props.mangaId}/chapter/${props.chapterId}/page`, "POST", formData
+        )
+        if (!res) {
             notFound()
         }
-        if (!res.ok) {
-            throw await res.json()
-        }
-        const newPage = await res.json()
-        setPages(prev => prev.concat([newPage]))
+        setPages(prev => prev.concat([res]))
     }
 
     function handleTitle(e: ChangeEvent<HTMLInputElement>) {
         setTitle(e.target.value)
     }
 
-    const UpdateChapter: MouseEventHandler = async (e) => {
+    const UpdateChapter: MouseEventHandler = (e) => {
         e.preventDefault()
-        const res = await fetch(`${HOST}/api/content/${props.mangaId}/chapter/${props.chapterId}`, {
-            method: "PUT",
-            headers: new Headers({
-                "Content-Type": "application/json"
-            }),
-            body: JSON.stringify({chapterId: props.chapterId, title})
-        })
-        const body = await res.json()
-        if (!res.ok) {
-            throw body
-        }
+        return fetchJson<PutChapter, Chapter>(`${HOST}/api/content/${props.mangaId}/chapter/${props.chapterId}`, "PUT", {chapterId: props.chapterId, title})
+
     }
 
     return <div>

@@ -4,21 +4,16 @@ import {HOST} from "@/app/globals";
 import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
 import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
 import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
+import {fetchOr404} from "@/common/fetch";
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
-    const res = await fetch(HOST + "/api/catalog/" + id);
-    console.log(res.status)
-    if (res.status == 404) {
+    const res = await fetchOr404<MangaResponse>(HOST + "/api/catalog/" + id);
+    if (!res) {
         return {notFound: true}
     }
-    if (!res.ok) {
-        console.error(await res.json())
-        return
-    }
-    const mangaPreview = await res.json() as MangaResponse;
-    return {props: mangaPreview};
+    return {props: res};
 }
 
 export default function MangaPreview(props: MangaResponse) {

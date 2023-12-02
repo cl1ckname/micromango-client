@@ -5,6 +5,17 @@ export interface LoginResponse {
     refreshTokenExpired: string,
 }
 
+export interface RegisterDto {
+    username: string
+    email: string
+    password: string
+}
+
+export interface LoginDto {
+    email: string
+    password: string
+}
+
 export interface Auth {
     userId: string,
     username: string

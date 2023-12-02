@@ -1,19 +1,19 @@
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
 import {Profile} from "@/dto/user";
+import {fetchOr404} from "@/common/fetch";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId  = context.query.userId as string | undefined
     if (!userId) {
         return {notFound: true}
     }
-    const res = await fetch(`${HOST}/api/profile/${userId}`)
-    const body = await res.json()
-    if (!res.ok) {
-        throw body
+    const res = await fetchOr404<Profile>(`${HOST}/api/profile/${userId}`)
+    if (!res) {
+        return {notFound: true}
     }
     return {
-        props: body
+        props: res
     }
 }
 export default function ProfilePage(props: Profile) {

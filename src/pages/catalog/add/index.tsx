@@ -1,7 +1,9 @@
-import {FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useState} from "react";
 import {MangaResponse} from "@/dto/catalog";
 import {useRouter} from "next/router";
 import {HOST} from "@/app/globals";
+import {fetchFormData} from "@/common/fetch";
+import {notFound} from "next/navigation";
 
 export default function AddManga() {
     const [title, setTitle] = useState('')
@@ -16,17 +18,20 @@ export default function AddManga() {
         if (cover) {
             formData.append("cover", cover, cover.name)
         }
-        const res = await fetch(HOST + "/api/catalog", {
-            method: "POST",
-            mode: "cors",
-            body: formData
-        })
-        if (!res.ok) {
-            console.error(await res.json())
+        const res = await fetchFormData<MangaResponse>(HOST + "/api/catalog", "POST", formData)
+        if (!res) {
+            notFound()
+        }
+        return router.replace("/catalog/manga/" + res.mangaId)
+    }
+
+    function handleSetPreview(e: ChangeEvent<HTMLInputElement>) {
+        const fileList = e.target.files || ([] as File[])
+        if (fileList.length == 0) {
             return
         }
-        const createdManga = await res.json() as MangaResponse
-        return router.replace("/catalog/manga/" + createdManga.mangaId)
+        const file = fileList[0]
+        setCover(file)
     }
 
     return <div className="my-4 max-w-screen-md border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
@@ -75,15 +80,7 @@ export default function AddManga() {
                     type="file"
                     className="max-w-full rounded-lg px-2 font-medium text-blue-600 outline-none ring-blue-600 focus:ring-1"
                     accept="image/png, image/jpeg"
-                    onChange={e => {
-                        const fileList = e.target.files || ([] as File[])
-                        if (fileList.length == 0) {
-                            return
-                        }
-                        const file = fileList[0]
-                        setCover(file)
-                    }
-                    }
+                    onChange={handleSetPreview}
                 />
             </div>
         </div>

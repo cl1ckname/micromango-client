@@ -1,20 +1,16 @@
-import {MangaPreviewResponse, MangaResponse} from "@/dto/catalog";
+import {MangaPreviewResponse} from "@/dto/catalog";
 import {HOST} from "@/app/globals";
+import {fetchOr404} from "@/common/fetch";
 
 interface HomeProps {
     catalog: MangaPreviewResponse[]
 }
 
 export async function getServerSideProps() {
-    const response = await fetch(HOST + "/api/catalog")
-    if (!response.ok) {
-        console.error(await response.json())
-        throw "Invalid response code: " + response.status
-    }
-    const mangas = await response.json()
+    const res = await fetchOr404<MangaPreviewResponse[]>(HOST + "/api/catalog")
     return {
         props: {
-            catalog: mangas || []
+            catalog: res || []
         }
     }
 }

@@ -3,6 +3,8 @@ import {HOST} from "@/app/globals";
 import useAuth from "@/hooks/useAuth";
 import {Auth} from "@/dto/user";
 import {useRouter} from "next/router";
+import {fetchJson, HttpMethod} from "@/common/fetch";
+import {PostList} from "@/dto/profile";
 
 const STATUS_LIST = ['Reading', 'To read', 'Completed', 'Drop', "Unknown"]
 const UNKNOWN_INDEX = STATUS_LIST.length - 1
@@ -22,24 +24,14 @@ export default function StatusSelect(props: {
         if (!auth) {
             return router.push("/login")
         }
-        let method = "POST"
+        let method: HttpMethod = "POST"
         if (i == UNKNOWN_INDEX) {
             method = "DELETE"
         }
-        const res = await fetch(`${HOST}/api/profile/${auth.userId}/list`, {
-            method: method,
-            headers: new Headers({
-                "Content-Type": "application/json"
-            }),
-            body: JSON.stringify({
+        return await fetchJson<PostList, unknown>(`${HOST}/api/profile/${auth.userId}/list`, method, {
                 mangaId: props.mangaId,
                 list: i
             })
-        })
-        const body = await res.json()
-        if (!res.ok) {
-            throw body
-        }
     }
 
     return <select

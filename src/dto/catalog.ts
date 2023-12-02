@@ -34,6 +34,10 @@ export interface Chapter {
     createdAt: string
 }
 
+export interface PostChapter {
+    title: string, number: number
+}
+
 export interface PageHead {
     pageId: string
     number: number
@@ -41,8 +45,7 @@ export interface PageHead {
 
 }
 
-export interface CreateManga {
+export interface PutChapter {
+    chapterId: string
     title: string
-    description: string
-    cover: string
 }

@@ -5,21 +5,19 @@ import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {notFound} from "next/navigation";
 import ReadingLayout from "@/pages/catalog/manga/[id]/read/layout";
+import {fetchOr404} from "@/common/fetch";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id, chapter} = context.query;
     if (!id || !chapter) {
         return {props: {}}
     }
-    const chapterRes = await fetch(`${HOST}/api/content/${id}`)
-    if (chapterRes.status == 404) {
+    const chapterRes = await fetchOr404<MangaContentResponse>(`${HOST}/api/content/${id}`)
+    if (!chapterRes) {
         return {notFound: true}
     }
-    if (!chapterRes.ok) {
-        throw await chapterRes.json()
-    }
     return {
-        props: await chapterRes.json()
+        props: chapterRes
     }
 }
 export default function MangaView(props: MangaContentResponse) {
@@ -74,14 +72,10 @@ export default function MangaView(props: MangaContentResponse) {
         if (!chapterMeta) {
             notFound()
         }
-        fetch(`${HOST}/api/content/${props.mangaId}/chapter/${chapterMeta.chapterId}`).then(async chapterRes => {
-            if (chapterRes.status == 404) {
+        fetchOr404<Chapter>(`${HOST}/api/content/${props.mangaId}/chapter/${chapterMeta.chapterId}`).then(async c => {
+            if (!c) {
                 notFound()
             }
-            if (!chapterRes.ok) {
-                throw await chapterRes.json()
-            }
-            const c = await chapterRes.json() as Chapter
             c.pages = c.pages.sort((a,b) => a.number - b.number)
             setChapter(c)
         })
