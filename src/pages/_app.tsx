@@ -16,7 +16,7 @@ export default function MyApp({Component, pageProps}: AppProps) {
 }
 
 function Navbar() {
-    const [username, setUsername] = useState("")
+    const [auth, setAuth] = useState<Auth | null>(null)
 
     const router = useRouter()
     const active = "text-sm text-blue-600 font-bold"
@@ -29,15 +29,14 @@ function Navbar() {
 
     useEffect(() => {
         const auth = localStorage.getItem("auth")
-        if (auth) {
-            const login: LoginResponse = JSON.parse(auth)
-            const token = login.accessToken
-            const payloadB64 = token.split(".")[1]
-            const payloadJson = atob(payloadB64)
-            const payload = JSON.parse(payloadJson) as Auth
-            console.log(payload)
-            setUsername(payload.username)
-        }
+        if (!auth) { return }
+
+        const login: LoginResponse = JSON.parse(auth)
+        const token = login.accessToken
+        const payloadB64 = token.split(".")[1]
+        const payloadJson = atob(payloadB64)
+        const payload = JSON.parse(payloadJson) as Auth
+        setAuth(payload)
     }, []);
 
     return <nav className="relative px-4 py-4 flex justify-between items-center bg-white">
@@ -64,7 +63,7 @@ function Navbar() {
             <li><a className="text-sm text-gray-400 hover:text-gray-500" href="#">...</a></li>
         </ul>
         <>
-            {(username) ? username : <SignButtons/>}
+            {(auth) ? <a href={`/profile/${auth.userId}`}>{auth.username}</a> : <SignButtons/>}
         </>
     </nav>
 }
