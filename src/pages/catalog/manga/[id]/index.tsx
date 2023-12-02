@@ -3,6 +3,7 @@ import {MangaResponse} from "@/dto/catalog";
 import {HOST} from "@/app/globals";
 import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
 import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
+import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -42,6 +43,7 @@ export default function MangaPreview(props: MangaResponse) {
                         type="button" >Edit
                     </button>
                 </a>
+                <StatusSelect mangaId={props.mangaId}/>
             </div>
             <div className="grow">
                 <Tabs

@@ -1,7 +1,7 @@
 import {Chapter} from "@/dto/catalog";
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
-import {useState} from "react";
+import {ChangeEvent, MouseEventHandler, useState} from "react";
 import {notFound} from "next/navigation";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -24,6 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function EditChapter(props: Chapter) {
     const [file, setFile] = useState<File | null>(null)
     const [pages, setPages] = useState(props.pages || [])
+    const [title, setTitle] = useState(props.title)
     async function AddPage() {
         const formData = new FormData()
         formData.append("number", pages.length + 1 + "")
@@ -45,7 +46,30 @@ export default function EditChapter(props: Chapter) {
         setPages(prev => prev.concat([newPage]))
     }
 
+    function handleTitle(e: ChangeEvent<HTMLInputElement>) {
+        setTitle(e.target.value)
+    }
+
+    const UpdateChapter: MouseEventHandler = async (e) => {
+        e.preventDefault()
+        const res = await fetch(`${HOST}/api/content/${props.mangaId}/chapter/${props.chapterId}`, {
+            method: "PUT",
+            headers: new Headers({
+                "Content-Type": "application/json"
+            }),
+            body: JSON.stringify({chapterId: props.chapterId, title})
+        })
+        const body = await res.json()
+        if (!res.ok) {
+            throw body
+        }
+    }
+
     return <div>
+        <div className="flex flex-row">
+            <input value={title} onChange={handleTitle} type="text"/>
+            <button onClick={UpdateChapter}>Rename</button>
+        </div>
         <div className="flex flex-wrap items-center">
             <div className="relative w-full px-4 max-w-full flex-grow flex-1">
                 <h3 className="font-semibold text-base text-blueGray-700">Pages</h3>
