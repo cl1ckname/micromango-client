@@ -8,11 +8,7 @@ interface HomeProps {
 
 export async function getServerSideProps() {
     const res = await fetchOr404<MangaPreviewResponse[]>(HOST + "/api/catalog")
-    return {
-        props: {
-            catalog: res || []
-        }
-    }
+    return { props: { catalog: res || [] } }
 }
 
 export default function Home(props: HomeProps) {

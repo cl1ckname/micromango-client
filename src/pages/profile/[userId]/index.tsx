@@ -1,7 +1,8 @@
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
-import {Profile} from "@/dto/user";
+import {Profile, ProfileEncoded} from "@/dto/user";
 import {fetchOr404} from "@/common/fetch";
+import {useRouter} from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId  = context.query.userId as string | undefined
@@ -12,11 +13,21 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (!res) {
         return {notFound: true}
     }
+    let profile: ProfileEncoded | null
+    try {
+        profile = {...res, bio:  JSON.parse(res.bio)}
+    }
+    catch (e) {
+        console.warn(e)
+        profile = {...res, bio: {gender: "Other", status: "", description: ""}}
+    }
     return {
-        props: res
+        props: profile
     }
 }
-export default function ProfilePage(props: Profile) {
+export default function ProfilePage(props: ProfileEncoded) {
+    const router = useRouter()
+
     return <div className="container mx-auto my-5 p-5">
         <div className="md:flex no-wrap md:-mx-2 ">
             <div className="w-full md:w-3/12 md:mx-2">
@@ -29,10 +40,10 @@ export default function ProfilePage(props: Profile) {
                                       d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                         </span>
-                        <span>Similar Profiles</span>
+                        <span>{props.username}</span>
                     </div>
                     <div className="grid grid-cols-3">
-                       <img src={props.picture} alt={"upload pic"}/>
+                       <img src={HOST + "/static/" + props.picture} alt={"upload pic"}/>
                     </div>
                 </div>
                 <div className="bg-white p-3 border-t-4 border-green-400">
@@ -41,9 +52,9 @@ export default function ProfilePage(props: Profile) {
                              src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
                              alt=""/>
                     </div>
-                    <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">{props.username}</h1>
-                    <h3 className="text-gray-600 font-lg text-semibold leading-6">Owner at Her Company Inc.</h3>
-                    <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">{props.bio}</p>
+                    <h1 className="text-gray-900 font-bold text-semibold leading-8 my-1">{props.bio.status}</h1>
+                    <h3 className="text-gray-900 font-lg text-semibold leading-6">{props.bio.gender}</h3>
+                    <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">{props.bio.description}</p>
                     <ul
                         className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
                         <li className="flex items-center py-3">
@@ -110,8 +121,9 @@ export default function ProfilePage(props: Profile) {
                         </div>
                     </div>
                     <button
-                        className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">Show
-                        Full Information</button>
+                        className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4"
+                        onClick={_ => router.push(`/profile/${props.userId}/edit`)}
+                    >Edit profile</button>
                 </div>
                 <div className="my-4"></div>
                 <div className="bg-white p-3 shadow-sm rounded-sm">

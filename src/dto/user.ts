@@ -28,3 +28,17 @@ export interface Profile {
     bio: string,
     createdAt: string
 }
+
+export interface ProfileBio {
+    status: string
+    description: string
+    gender: string
+}
+
+export interface ProfileEncoded {
+    userId: string,
+    username: string,
+    picture: string,
+    bio: ProfileBio,
+    createdAt: string
+}
