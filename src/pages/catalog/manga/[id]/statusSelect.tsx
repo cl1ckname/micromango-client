@@ -6,12 +6,13 @@ import {useRouter} from "next/router";
 import {fetchJson, HttpMethod} from "@/common/fetch";
 import {PostList} from "@/dto/profile";
 
-const STATUS_LIST = ['Reading', 'To read', 'Completed', 'Drop', "Unknown"]
-const UNKNOWN_INDEX = STATUS_LIST.length - 1
+const STATUS_LIST = [ "Unknown", 'Reading', 'To read', 'Completed', 'Drop']
+const UNKNOWN_INDEX = 0
 export default function StatusSelect(props: {
     mangaId: string
+    status?: number
 }) {
-    const [status, setStatus] = useState(UNKNOWN_INDEX)
+    const [status, setStatus] = useState(props.status || UNKNOWN_INDEX)
     const [auth, setAuth] = useState<Auth | null>(null)
     const router = useRouter()
 

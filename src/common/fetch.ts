@@ -9,7 +9,8 @@ export async function fetchJson<P, R>(url: string, method: HttpMethod, body?: P)
         headers: new Headers({
             "Content-Type": "application/json"
         }),
-        body: bs
+        body: bs,
+        credentials: "include"
     })
     const respBody = await res.json()
     if (!res.ok) {
@@ -18,8 +19,16 @@ export async function fetchJson<P, R>(url: string, method: HttpMethod, body?: P)
     return respBody as R
 }
 
-export async function fetchOr404<R>(url: string): Promise<R | null> {
-    const res = await fetch(url);
+export async function fetchOr404<R>(url: string, auth?: string): Promise<R | null> {
+    const headers = new Headers()
+    if (auth) {
+        headers.set("Authorization", `Bearer ${auth}`)
+    }
+
+    const res = await fetch(url, {
+        headers,
+        credentials: "include"
+    });
     if (res.status == 404) {
         return null
     }
@@ -33,7 +42,8 @@ export async function fetchOr404<R>(url: string): Promise<R | null> {
 export async function fetchFormData<R>(url: string, method: HttpMethod, body: FormData): Promise<R | null> {
     const res = await fetch(url, {
         method,
-        body
+        body,
+        credentials: "include"
     })
     if (!res) {
         return null

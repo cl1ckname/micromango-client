@@ -7,9 +7,10 @@ import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
 import {fetchOr404} from "@/common/fetch";
 
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const {id} = context.query;
-    const res = await fetchOr404<MangaResponse>(HOST + "/api/catalog/" + id);
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+    const {id} = ctx.query;
+    const {auth} = ctx.req.cookies
+    const res = await fetchOr404<MangaResponse>(HOST + "/api/catalog/" + id, auth);
     if (!res) {
         return {notFound: true}
     }
@@ -38,7 +39,7 @@ export default function MangaPreview(props: MangaResponse) {
                         type="button" >Edit
                     </button>
                 </a>
-                <StatusSelect mangaId={props.mangaId}/>
+                <StatusSelect mangaId={props.mangaId} status={props.list}/>
             </div>
             <div className="grow">
                 <Tabs

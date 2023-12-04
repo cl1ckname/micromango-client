@@ -5,6 +5,7 @@ export interface MangaResponse {
     description: string
     content: MangaContentResponse
     createdAt: string
+    list?: number
 }
 
 export interface MangaPreviewResponse {
