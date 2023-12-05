@@ -4,10 +4,8 @@ import useAuth from "@/hooks/useAuth";
 import {Auth} from "@/dto/user";
 import {useRouter} from "next/router";
 import {fetchJson, HttpMethod} from "@/common/fetch";
-import {PostList} from "@/dto/profile";
+import {PostList, STATUS_LIST, UNKNOWN_INDEX} from "@/dto/profile";
 
-const STATUS_LIST = [ "Unknown", 'Reading', 'To read', 'Completed', 'Drop']
-const UNKNOWN_INDEX = 0
 export default function StatusSelect(props: {
     mangaId: string
     status?: number
