@@ -30,6 +30,7 @@ export async function fetchOr404<R>(url: string, auth?: string): Promise<R | nul
         credentials: "include"
     });
     if (res.status == 404) {
+        console.log(res)
         return null
     }
     const body = await res.json()

@@ -44,16 +44,9 @@ export default function ProfilePage(props: ProfileEncoded) {
                         </span>
                         <span>{props.username}</span>
                     </div>
-                    <div className="grid grid-cols-3">
-                       <img src={HOST + "/static/" + props.picture} alt={"upload pic"}/>
-                    </div>
+                    <img src={HOST + "/static/" + props.picture} alt={"upload pic"}/>
                 </div>
                 <div className="bg-white p-3 border-t-4 border-green-400">
-                    <div className="image overflow-hidden">
-                        <img className="h-auto w-full mx-auto"
-                             src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
-                             alt=""/>
-                    </div>
                     <h1 className="text-gray-900 font-bold text-semibold leading-8 my-1">{props.bio.status}</h1>
                     <h3 className="text-gray-900 font-lg text-semibold leading-6">{props.bio.gender}</h3>
                     <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">{props.bio.description}</p>
@@ -96,7 +89,7 @@ export default function ProfilePage(props: ProfileEncoded) {
                             </div>
                             <div className="grid grid-cols-2">
                                 <div className="px-4 py-2 font-semibold">Gender</div>
-                                <div className="px-4 py-2">Female</div>
+                                <div className="px-4 py-2">{props.bio.gender}</div>
                             </div>
                             <div className="grid grid-cols-2">
                                 <div className="px-4 py-2 font-semibold">Contact No.</div>

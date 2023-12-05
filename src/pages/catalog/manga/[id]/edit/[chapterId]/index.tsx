@@ -26,6 +26,7 @@ export default function EditChapter(props: Chapter) {
         const formData = new FormData()
         formData.append("number", pages.length + 1 + "")
         formData.append("mangaId", props.mangaId)
+        formData.append("chapterId", props.chapterId)
         if (file) {
             formData.append("image", file, file.name)
         }

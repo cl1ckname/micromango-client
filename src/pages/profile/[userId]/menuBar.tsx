@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {STATUS_LIST} from "@/dto/profile";
 import {MangaPreviewResponse} from "@/dto/catalog";
 import {fetchOr404} from "@/common/fetch";
@@ -13,6 +13,10 @@ export function MenuBar(props: {
 }) {
     const [tab, setTab] = useState(0)
     const [lists, setLists] = useState<ListPreload>(nullList)
+
+    useEffect(() => {
+        loadList(tab)
+    }, []);
     async function loadList(i: number) {
         if (lists[i]) {
             return
@@ -20,7 +24,6 @@ export function MenuBar(props: {
         const url = `${HOST}/api/profile/${props.userId}/list?list=${i+1}`
         const list= await fetchOr404<MangaPreviewResponse[]>(url)
         setLists(prev => ({...prev, [i]: list}))
-        console.log("new data!")
     }
 
     function handleSwitch(i: number) {
@@ -32,7 +35,6 @@ export function MenuBar(props: {
 
     const passive = " flex-grow text-center text-xl bg-green-100 fit inline-block"
     const active = " flex-grow text-center text-xl bg-green-400 fit inline-block"
-    console.log(tab, lists)
     return <>
         <ul className={"flex justify-around"}>
             {STATUS_LIST.slice(1).map((e, i) =>
@@ -40,7 +42,7 @@ export function MenuBar(props: {
                     {e}
                 </li>)}
         </ul>
-        {lists[tab] ? <div className="flex">
+        {lists[tab] ? <div className="flex flex-wrap">
             {lists[tab]?.map(e => MangaPreviewCard(e))}
         </div> : <p>nothing</p>}
 
