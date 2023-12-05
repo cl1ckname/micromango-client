@@ -36,7 +36,8 @@ export interface Chapter {
 }
 
 export interface PostChapter {
-    title: string, number: number
+    title: string,
+    number: number
 }
 
 export interface PageHead {
@@ -49,4 +50,28 @@ export interface PageHead {
 export interface PutChapter {
     chapterId: string
     title: string
+}
+
+export const GENRES = {
+    0: 'Action',
+    1: 'Adventure',
+    2: 'Comedy',
+    3: 'Mystery',
+    4: 'Drama',
+    5: 'Ecchi',
+    6: 'Fantasy',
+    7: 'Harem',
+    8: 'Historical',
+    9: 'Horror',
+    10: 'Mecha',
+    11: 'Parody',
+    12: 'Psychological',
+    13: 'Romance',
+    14: 'Samurai',
+    15: 'School',
+    16: 'SciFi',
+    17: 'Slice of Life',
+    18: 'Sports',
+    19: 'Thriller',
+    20: 'War'
 }
