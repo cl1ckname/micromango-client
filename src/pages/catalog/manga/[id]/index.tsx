@@ -14,11 +14,13 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     if (!res) {
         return {notFound: true}
     }
+    res.genres = res.genres || []
     return {props: res};
 }
 
 export default function MangaPreview(props: MangaResponse) {
     const chapters = props.content.chapters || []
+    console.log(props)
 
     return <div className="my-4 border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
         <a href="/catalog">To catalog</a>
@@ -43,12 +45,22 @@ export default function MangaPreview(props: MangaResponse) {
             </div>
             <div className="grow">
                 <Tabs
-                    description={props.description}
+                    description={<DescriptionTab description={props.description} genres={props.genres}/>}
                     chapter={<ChapterTable mangaId={props.mangaId} chapterHeads={chapters}/>}
                 />
             </div>
         </div>
+    </div>
+}
 
-
+function DescriptionTab(props: {
+    description: string
+    genres: string[]
+}) {
+    return <div>
+        <span>{props.description}</span>
+        <div>
+            {props.genres.map(g => <span>{g}</span>)}
+        </div>
     </div>
 }

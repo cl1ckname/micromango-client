@@ -6,6 +6,14 @@ export interface MangaResponse {
     content: MangaContentResponse
     createdAt: string
     list?: number
+    genres: string[]
+}
+
+export interface MangaEditProperties {
+    title: string
+    cover?: File
+    description: string
+    genres: string[]
 }
 
 export interface MangaPreviewResponse {
