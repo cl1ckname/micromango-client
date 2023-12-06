@@ -1,5 +1,5 @@
 import {GetServerSidePropsContext} from "next";
-import {MangaResponse} from "@/dto/catalog";
+import {GENRES, MangaResponse} from "@/dto/catalog";
 import {HOST} from "@/app/globals";
 import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
 import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
@@ -20,7 +20,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function MangaPreview(props: MangaResponse) {
     const chapters = props.content.chapters || []
-    console.log(props)
 
     return <div className="my-4 border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
         <a href="/catalog">To catalog</a>
@@ -55,12 +54,15 @@ export default function MangaPreview(props: MangaResponse) {
 
 function DescriptionTab(props: {
     description: string
-    genres: string[]
+    genres: number[]
 }) {
     return <div>
-        <span>{props.description}</span>
+        <div className="min-h-[7em]">
+            {props.description}
+        </div>
         <div>
-            {props.genres.map(g => <span>{g}</span>)}
+            {props.genres.map(g =>
+                <span className={"text-sm inline-block font-medium me-2 px-2.5 py-0.5 rounded " + GENRES[g].className}>{GENRES[g].title}</span>)}
         </div>
     </div>
 }

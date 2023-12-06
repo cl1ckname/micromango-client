@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {GENRES} from "@/dto/catalog";
 export default function GenreList(props: {
     value: number[]
@@ -24,7 +23,7 @@ export default function GenreList(props: {
                     type="checkbox"
                     checked={props.value.includes(Number.parseInt(i))}
                     onChange={getHandler(Number.parseInt(i))}
-                />{GENRES[Number.parseInt(i)]}</span>
+                />{GENRES[Number.parseInt(i)].title}</span>
         </li>)}
     </ul>
 }

@@ -15,6 +15,15 @@ const config: Config = {
       },
     },
   },
+  safelist: [
+      'bg-white',
+      'bg-black',
+      'text-white',
+      'text-black',
+    {
+      pattern: /bg-(.*)-(.*)/,
+    },
+  ],
   plugins: [],
 }
 export default config
