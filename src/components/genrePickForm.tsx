@@ -1,24 +1,29 @@
 import {GENRES} from "@/dto/catalog";
 import Tribox from "@/components/tribox";
-import {useState} from "react";
 
 export default function GenrePick(props: {
     value: Record<number, boolean>
     onChange: (r: Record<number, boolean>) => any
 }){
-    const [genres, setGenres] = useState<Record<number, boolean>>({})
-
-    function handleCheck() {
+    const genres = Object.assign({}, props.value)
+    function getHandleCheck(i: number) {
         return (v: boolean | null, ) => {
-            const newV = (v == null) ? undefined : v
-            setGenres(prev => ({...prev, genre: newV}))
+            if (v != null) {
+                genres[i] = v
+            } else {
+                delete genres[i]
+            }
             props.onChange(genres)
         }
     }
 
+    console.log("g", props.value)
     return <ul>
         {Object.values(GENRES).map((i, ind) => <li key={i.title}>
-            <span><Tribox onChange={handleCheck()} checked={props.value[ind]}/>{i.title}</span>
+            <span>
+                <Tribox onChange={getHandleCheck(ind+1)} checked={genres[ind+1]}/>{
+                i.title}
+            </span>
         </li>)}
     </ul>
 }

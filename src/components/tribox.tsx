@@ -11,12 +11,12 @@ const updateInput = (ref: RefObject<HTMLInputElement>, checked: null | boolean) 
 };
 
 export default function Tribox(props: {
-    onChange?: (v: boolean | null) => any
-    checked?: boolean | null
+    onChange: (v: boolean | null) => any
+    checked: boolean | null
 
 }) {
     const cRef = useRef<HTMLInputElement>(null);
-    const checkedRef = useRef<boolean | null>(props.checked || null)
+    const checkedRef = useRef<boolean | null>(props.checked)
     const handleClick = () => {
         switch (checkedRef.current) {
             case true:
@@ -35,8 +35,10 @@ export default function Tribox(props: {
         }
     };
     useEffect(() => {
-        if (cRef.current)
+        if (cRef.current) {
             cRef.current.indeterminate = true;
+            updateInput(cRef, props.checked)
+        }
     }, [cRef]);
 
     return <input

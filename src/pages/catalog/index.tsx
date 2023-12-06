@@ -4,6 +4,7 @@ import {fetchOr404} from "@/common/fetch";
 import {GetServerSidePropsContext} from "next";
 import {MangaPreviewCard} from "@/components/mangaPreviewCard";
 import GenrePick from "@/components/genrePickForm";
+import {useRouter} from "next/router";
 
 interface HomeProps {
     catalog: MangaPreviewResponse[]
@@ -22,7 +23,52 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     return { props: { catalog: res || [] } }
 }
 
+function parseQueryIntArr(genre: string | string[] | undefined) {
+    if (!genre) return []
+    if (typeof genre === "string") {
+        return [Number.parseInt(genre)]
+    }
+    return genre.map(i => Number.parseInt(i)).filter(i => !!i)
+}
+
 export default function Home(props: HomeProps) {
+    const router = useRouter()
+    const genreMap: Record<number, boolean> = {}
+    function getGenres(): number[] {
+        const {genre} = router.query
+        return parseQueryIntArr(genre);
+    }
+    function excludeGenres(): number[] {
+        const {exclude_genre} = router.query
+        // console.log("ex", exclude_genre, router.query)
+        return parseQueryIntArr(exclude_genre);
+    }
+
+    for (const i of getGenres()) {
+        genreMap[i] = true
+    }
+    for (const i of excludeGenres()) {
+        genreMap[i] = false
+    }
+
+    function handlePickGenre(r: Record<number, boolean>) {
+        const newQ: Record<"genre" | "exclude_genre", string[]> = {genre: [], exclude_genre: []}
+        for (const k in r) {
+            const ki = Number.parseInt(k)
+            const v = r[ki]
+            if (v) {
+                newQ.genre.push(k)
+            } else {
+                newQ.exclude_genre.push(k)
+            }
+        }
+        router.query = newQ
+        router.replace({
+            pathname: router.pathname,
+            query: newQ
+        })
+    }
+
     return (
         <main className="min-h-screen mx-5">
             <div className="flex flex-row justify-between">
@@ -33,12 +79,10 @@ export default function Home(props: HomeProps) {
                 <div className="col-span-5">
                     <input type="text" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-100 sm:text-xs  focus:border-blue-500 my-3" placeholder="Search for title"/>
                     <div className="grid grid-cols-5 gap-20">
-                        {
-                            props.catalog.map(MangaPreviewCard)
-                        }
+                        {props.catalog.map(MangaPreviewCard)}
                     </div>
                 </div>
-                <GenrePick value={{}} onChange={() => {}}/>
+                <GenrePick value={genreMap} onChange={handlePickGenre}/>
             </div>
         </main>
     )
