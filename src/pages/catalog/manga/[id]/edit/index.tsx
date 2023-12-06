@@ -1,9 +1,10 @@
-import {Chapter, ChapterHead, MangaResponse, PostChapter} from "@/dto/catalog";
+import {Chapter, ChapterHead, MangaEditProperties, MangaResponse, PostChapter} from "@/dto/catalog";
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
 import {FormEvent, useState} from "react";
 import {useRouter} from "next/router";
 import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
+import MangaEdit from "@/components/mangaEdit";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
@@ -11,14 +12,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (!res) {
         return {notFound: true}
     }
+    res.genres = res.genres || []
     return {props: res};
 }
 
 export default function EditManga(props: MangaResponse) {
     const [chapters, setChapters] = useState<ChapterHead[]>(props.content.chapters || [])
     const [chapterName, setChapterName] = useState("")
-    const [title, setTitle] = useState(props.title)
-    const [description, setDescription] = useState(props.description)
+    const [manga, setManga] = useState<MangaEditProperties>({
+        title: props.title,
+        genres: props.genres,
+        description: props.description
+    })
     const router = useRouter()
     async function addChapter(e: FormEvent) {
         e.preventDefault()
@@ -40,8 +45,9 @@ export default function EditManga(props: MangaResponse) {
     async function updatePreview(e: FormEvent) {
         e.preventDefault()
         const formData = new FormData()
-        formData.append("title", title)
-        formData.append("description", description)
+        formData.append("genres", manga.genres.join(","))
+        formData.append("title", manga.title)
+        formData.append("description", manga.description)
         return fetchFormData(`${HOST}/api/catalog/${props.mangaId}`, "PUT", formData)
     }
 
@@ -60,8 +66,9 @@ export default function EditManga(props: MangaResponse) {
                 <input
                     type="text"
                     className="text-7xl font-semibold mb-4 text-decoration-line: underline bg-inherit"
-                    value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    value={manga.title}
+                    onChange={e =>
+                        setManga(prev => ({...prev, title: e.target.value}))}
                 />
                 <form method="POST">
                     <div className="mb-4">
@@ -71,8 +78,9 @@ export default function EditManga(props: MangaResponse) {
                             name="username"
                             className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                             autoComplete="off"
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
+                            value={manga.description}
+                            onChange={e =>
+                                setManga(prev => ({...prev, description: e.target.value}))}
                         />
                     </div>
                     <div className="mb-4 flex items-center">
@@ -88,7 +96,7 @@ export default function EditManga(props: MangaResponse) {
                 </form>
             </div>
         </div>
-
+        <MangaEdit manga={manga} onChange={setManga}/>
         <section className="py-1 bg-blueGray-50">
             <div className="w-full mb-12 xl:mb-0 mx-auto">
                 <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded ">

@@ -24,18 +24,19 @@ export default function MangaEdit(props: {
         props.onChange({...props.manga, cover: file})
     }
 
-    function handleCheck(genres: string[]) {
+    function handleCheck(genres: number[]) {
         props.onChange({...props.manga, genres})
     }
 
-    return <div className="grid grid-cols-4 gap-3">
+    return <div className="grid grid-cols-4 gap-3 mx-3 py-3">
         <div className="grid grid-cols-2 gap-3 col-span-3">
             <div>
                 <div className="flex flex-col gap-4 border-b py-4 sm:flex-row">
                     <p className="shrink-0 w-32 font-medium">Title</p>
                     <input
                         placeholder="Title"
-                        className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
+                        style={{inlineSize: "100%"}}
+                        className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1 break-words"
                         value={props.manga.title}
                         onChange={setTitle}
                     />
@@ -70,7 +71,6 @@ export default function MangaEdit(props: {
                 </div>
                 <div
                     className="flex h-56 w-full flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 p-5 text-center">
-                    {/*<img src="/images/ddHJYlQqOzyOKm4CSCY8o.png" className="h-16 w-16 rounded-full" />*/}
                     <p className="text-sm text-gray-600">Drop your desired image file here to start the upload</p>
                     <input
                         type="file"

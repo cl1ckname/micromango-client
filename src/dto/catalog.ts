@@ -13,7 +13,7 @@ export interface MangaEditProperties {
     title: string
     cover?: File
     description: string
-    genres: string[]
+    genres: number[]
 }
 
 export interface MangaPreviewResponse {
@@ -60,26 +60,26 @@ export interface PutChapter {
     title: string
 }
 
-export const GENRES = {
-    0: 'Action',
-    1: 'Adventure',
-    2: 'Comedy',
-    3: 'Mystery',
-    4: 'Drama',
-    5: 'Ecchi',
-    6: 'Fantasy',
-    7: 'Harem',
-    8: 'Historical',
-    9: 'Horror',
-    10: 'Mecha',
-    11: 'Parody',
-    12: 'Psychological',
-    13: 'Romance',
-    14: 'Samurai',
-    15: 'School',
-    16: 'SciFi',
-    17: 'Slice of Life',
-    18: 'Sports',
-    19: 'Thriller',
-    20: 'War'
+export const GENRES: Record<number, string> = {
+    1: 'Action',
+    2: 'Adventure',
+    3: 'Comedy',
+    4: 'Mystery',
+    5: 'Drama',
+    6: 'Ecchi',
+    7: 'Fantasy',
+    8: 'Harem',
+    9: 'Historical',
+    10: 'Horror',
+    11: 'Mecha',
+    12: 'Parody',
+    13: 'Psychological',
+    14: 'Romance',
+    15: 'Samurai',
+    16: 'School',
+    17: 'SciFi',
+    18: 'Slice of Life',
+    19: 'Sports',
+    20: 'Thriller',
+    21: 'War'
 }
