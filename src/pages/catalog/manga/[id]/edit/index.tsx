@@ -1,7 +1,7 @@
 import {Chapter, ChapterHead, MangaEditProperties, MangaResponse, PostChapter} from "@/dto/catalog";
 import {GetServerSidePropsContext} from "next";
 import {HOST} from "@/app/globals";
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
 import MangaEdit from "@/components/mangaEdit";
@@ -24,6 +24,13 @@ export default function EditManga(props: MangaResponse) {
         genres: props.genres,
         description: props.description
     })
+    const [cover, setCover] = useState(props.cover)
+
+    useEffect(() => {
+        if (manga.cover)
+            setCover(URL.createObjectURL(manga.cover))
+    }, [manga.cover]);
+
     const router = useRouter()
     async function addChapter(e: FormEvent) {
         e.preventDefault()
@@ -48,6 +55,9 @@ export default function EditManga(props: MangaResponse) {
         formData.append("genres", manga.genres.join(","))
         formData.append("title", manga.title)
         formData.append("description", manga.description)
+        if (manga.cover) {
+            formData.append("cover", manga.cover, manga.cover.name)
+        }
         return fetchFormData(`${HOST}/api/catalog/${props.mangaId}`, "PUT", formData)
     }
 
@@ -60,7 +70,7 @@ export default function EditManga(props: MangaResponse) {
     return <>
         <div className="bg-gray-100 flex justify-center items-center h-screen">
             <div className="w-1/2 h-screen hidden lg:block">
-                <img src={props.cover} alt="Placeholder Image" className="object-cover w-full h-full"/>
+                <img src={cover} alt="Placeholder Image" className="object-cover w-full h-full"/>
             </div>
             <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
                 <input
