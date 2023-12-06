@@ -1,6 +1,6 @@
 import {GENRES} from "@/dto/catalog";
 import Tribox from "@/components/tribox";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function GenrePick(props: {
     value: Record<number, boolean>
@@ -8,7 +8,7 @@ export default function GenrePick(props: {
 }){
     const [genres, setGenres] = useState<Record<number, boolean>>({})
 
-    function handleCheck(genre: number) {
+    function handleCheck() {
         return (v: boolean | null, ) => {
             const newV = (v == null) ? undefined : v
             setGenres(prev => ({...prev, genre: newV}))
@@ -17,8 +17,8 @@ export default function GenrePick(props: {
     }
 
     return <ul>
-        {Object.values(GENRES).map((i, ind) => <li key={i}>
-            <span><Tribox onChange={handleCheck(ind)} checked={props.value[ind]}/>{i}</span>
+        {Object.values(GENRES).map((i, ind) => <li key={i.title}>
+            <span><Tribox onChange={handleCheck()} checked={props.value[ind]}/>{i.title}</span>
         </li>)}
     </ul>
 }

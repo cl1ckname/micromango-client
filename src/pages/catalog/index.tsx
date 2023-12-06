@@ -24,12 +24,21 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function Home(props: HomeProps) {
     return (
-        <main className="min-h-screen">
-            <a href="/catalog/add">Add manga</a>
-            <div className="flex flex-row">
-                {
-                    props.catalog.map(MangaPreviewCard)
-                }
+        <main className="min-h-screen mx-5">
+            <div className="flex flex-row justify-between">
+                <h1 className="text-3xl">Catalog</h1>
+                <a href="/catalog/add">Add manga</a>
+            </div>
+            <div className="grid grid-cols-6 gap-5">
+                <div className="col-span-5">
+                    <input type="text" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-100 sm:text-xs  focus:border-blue-500 my-3" placeholder="Search for title"/>
+                    <div className="grid grid-cols-5 gap-20">
+                        {
+                            props.catalog.map(MangaPreviewCard)
+                        }
+                    </div>
+                </div>
+                <GenrePick value={{}} onChange={() => {}}/>
             </div>
         </main>
     )
