@@ -5,6 +5,7 @@ import {GetServerSidePropsContext} from "next";
 import {MangaPreviewCard} from "@/components/mangaPreviewCard";
 import GenrePick from "@/components/genrePickForm";
 import {useRouter} from "next/router";
+import {useState, KeyboardEvent} from "react";
 
 interface HomeProps {
     catalog: MangaPreviewResponse[]
@@ -34,6 +35,10 @@ function parseQueryIntArr(genre: string | string[] | undefined) {
 export default function Home(props: HomeProps) {
     const router = useRouter()
     const genreMap: Record<number, boolean> = {}
+    let {starts} = router.query
+    if (!starts || Array.isArray(starts)) {
+        starts = ""
+    }
     function getGenres(): number[] {
         const {genre} = router.query
         return parseQueryIntArr(genre);
@@ -49,6 +54,16 @@ export default function Home(props: HomeProps) {
     }
     for (const i of excludeGenres()) {
         genreMap[i] = false
+    }
+
+    async function handleTitleEnter(starts: string) {
+        const query = {...router.query, starts} as any
+        if (!query.starts)
+            delete query.starts
+        return router.replace({
+            pathname: router.pathname,
+            query
+        })
     }
 
     function handlePickGenre(r: Record<number, boolean>) {
@@ -77,7 +92,7 @@ export default function Home(props: HomeProps) {
             </div>
             <div className="grid grid-cols-6 gap-5">
                 <div className="col-span-5">
-                    <input type="text" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-100 sm:text-xs  focus:border-blue-500 my-3" placeholder="Search for title"/>
+                   <QueryInput value={starts} onChange={handleTitleEnter}/>
                     <div className="grid grid-cols-5 gap-20">
                         {props.catalog.map(MangaPreviewCard)}
                     </div>
@@ -88,3 +103,22 @@ export default function Home(props: HomeProps) {
     )
 }
 
+function QueryInput(props: {
+    value: string
+    onChange: (v: string) => any
+}) {
+    const [query, setQuery] = useState<string>(props.value)
+
+    function handleEnter(e: KeyboardEvent<HTMLInputElement>) {
+        if (e.code === "Enter")
+            props.onChange(query)
+    }
+
+    return <input type="text"
+                  className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-100 sm:text-xs  focus:border-blue-500 my-3"
+                  placeholder="Search for title"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  onKeyDown={handleEnter}
+    />
+}
