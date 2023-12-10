@@ -10,18 +10,19 @@ import {useState, KeyboardEvent} from "react";
 interface HomeProps {
     catalog: MangaPreviewResponse[]
 }
+
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const {auth} = ctx.req.cookies
     let url = HOST + "/api/catalog"
     let q = []
     for (const k of Object.keys(ctx.query)) {
-        q.push(k+"="+ctx.query[k])
+        q.push(k + "=" + ctx.query[k])
     }
     if (q.length) {
         url += "?" + q.join("&")
     }
     const res = await fetchOr404<MangaPreviewResponse[]>(url, auth)
-    return { props: { catalog: res || [] } }
+    return {props: {catalog: res || []}}
 }
 
 function parseQueryIntArr(genre: string | string[] | undefined) {
@@ -39,10 +40,12 @@ export default function Home(props: HomeProps) {
     if (!starts || Array.isArray(starts)) {
         starts = ""
     }
+
     function getGenres(): number[] {
         const {genre} = router.query
         return parseQueryIntArr(genre);
     }
+
     function excludeGenres(): number[] {
         const {exclude_genre} = router.query
         // console.log("ex", exclude_genre, router.query)
@@ -92,7 +95,7 @@ export default function Home(props: HomeProps) {
             </div>
             <div className="grid grid-cols-6 gap-5">
                 <div className="col-span-5">
-                   <QueryInput value={starts} onChange={handleTitleEnter}/>
+                    <QueryInput value={starts} onChange={handleTitleEnter}/>
                     <div className="grid grid-cols-5 gap-20">
                         {props.catalog.map(MangaPreviewCard)}
                     </div>
@@ -114,11 +117,22 @@ function QueryInput(props: {
             props.onChange(query)
     }
 
-    return <input type="text"
-                  className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-100 sm:text-xs  focus:border-blue-500 my-3"
-                  placeholder="Search for title"
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  onKeyDown={handleEnter}
-    />
+    function handleClick() {
+        props.onChange(query)
+    }
+
+    return <div className="relative">
+        <button
+            className={"absolute right-1 bottom-[0.1em] text-xl"}
+            onClick={handleClick}>
+            🔎
+        </button>
+        <input type="text"
+               className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-100 sm:text-xs  focus:border-blue-500 my-3"
+               placeholder="Search for title"
+               value={query}
+               onChange={e => setQuery(e.target.value)}
+               onKeyDown={handleEnter}
+        />
+    </div>
 }
