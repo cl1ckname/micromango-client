@@ -7,6 +7,7 @@ export interface MangaResponse {
     createdAt: string
     list?: number
     genres: number[]
+    listStats: Record<number, number>
 }
 
 export interface MangaEditProperties {

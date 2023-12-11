@@ -5,6 +5,7 @@ import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
 import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
 import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
 import {fetchOr404} from "@/common/fetch";
+import {STATUS_LIST} from "@/dto/profile";
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
@@ -44,7 +45,11 @@ export default function MangaPreview(props: MangaResponse) {
             </div>
             <div className="grow">
                 <Tabs
-                    description={<DescriptionTab description={props.description} genres={props.genres}/>}
+                    description={<DescriptionTab
+                        description={props.description}
+                        genres={props.genres}
+                        listStats={props.listStats}
+                    />}
                     chapter={<ChapterTable mangaId={props.mangaId} chapterHeads={chapters}/>}
                 />
             </div>
@@ -55,6 +60,7 @@ export default function MangaPreview(props: MangaResponse) {
 function DescriptionTab(props: {
     description: string
     genres: number[]
+    listStats: Record<number, number>
 }) {
     return <div>
         <div className="min-h-[7em]">
@@ -64,5 +70,19 @@ function DescriptionTab(props: {
             {props.genres.map(g =>
                 <span className={"text-sm inline-block font-medium me-2 px-2.5 py-0.5 rounded " + GENRES[g].className}>{GENRES[g].title}</span>)}
         </div>
+        <div className="grid grid-cols-2">
+            {ListStats(props.listStats)}
+        </div>
+    </div>
+}
+
+function ListStats(props: Record<number, number>) {
+    const sum = Object.values(props).reduce((i,j) => i+j)
+    return <div>
+        <ul>
+            {STATUS_LIST.map((k, i) =>
+                <li key={k}>{k} - {props[i] || 0}: {100 * (props[i] || 0) / sum}%</li>
+            )}
+        </ul>
     </div>
 }
