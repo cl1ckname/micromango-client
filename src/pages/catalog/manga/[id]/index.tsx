@@ -79,9 +79,13 @@ function DescriptionTab(props: {
 function ListStats(props: Record<number, number>) {
     const sum = Object.values(props).reduce((i,j) => i+j)
     return <div>
+        In lists: {sum}
         <ul>
             {STATUS_LIST.map((k, i) =>
-                <li key={k}>{k} - {props[i] || 0}: {100 * (props[i] || 0) / sum}%</li>
+                <li key={k}>
+                    {k} - {props[i] || 0}: {((props[i] || 0) / sum)
+                    .toLocaleString(undefined, {style: "percent", minimumFractionDigits: 2})}
+                </li>
             )}
         </ul>
     </div>
