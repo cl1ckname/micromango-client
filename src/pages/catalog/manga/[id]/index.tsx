@@ -4,8 +4,9 @@ import {HOST} from "@/app/globals";
 import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
 import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
 import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
-import {fetchOr404} from "@/common/fetch";
+import {fetchJson, fetchOr404, HttpMethod} from "@/common/fetch";
 import {STATUS_LIST} from "@/dto/profile";
+import {useState} from "react";
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
@@ -21,10 +22,24 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function MangaPreview(props: MangaResponse) {
     const chapters = props.content.chapters || []
+    const [liked, setLiked] = useState(props.liked)
+
+    async function handleLike(v: boolean) {
+        setLiked(v)
+        let method: HttpMethod = "DELETE"
+        if (v) {
+            method = "POST"
+        }
+
+        return fetchJson(`${HOST}/api/activity/manga/${props.mangaId}/like`, method)
+    }
 
     return <div className="my-4 border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
         <a href="/catalog">To catalog</a>
-        <h1 className="text-3xl font-bold leading-9 sm:text-4xl sm:leading-tight">{props.title}</h1>
+        <div className="flex justify-between">
+            <h1 className="text-3xl font-bold leading-9 sm:text-4xl sm:leading-tight">{props.title}</h1>
+            <p className="text-xl font-bold">+{props.likes || 0}</p>
+        </div>
         <h3 className="">{props.createdAt}</h3>
         <div className="flex justify-items-center w-full">
             <div className="min-w-fit pr-2">
@@ -41,6 +56,7 @@ export default function MangaPreview(props: MangaResponse) {
                         type="button" >Edit
                     </button>
                 </a>
+                <LikeButton liked={liked} onChange={handleLike}/>
                 <StatusSelect mangaId={props.mangaId} status={props.list}/>
             </div>
             <div className="grow">
@@ -89,4 +105,19 @@ function ListStats(props: Record<number, number>) {
             )}
         </ul>
     </div>
+}
+
+function LikeButton(props: {
+    liked: boolean,
+    onChange: (b: boolean) => any
+}) {
+    const liked = "bg-pink-500 text-white active:bg-indigo-600 text-m font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full mt-1"
+    const unliked = "bg-pink-200 text-white active:bg-indigo-600 text-m font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full mt-1"
+
+    return <button
+        className={props.liked ? liked : unliked}
+        type="button"
+        onClick={_ => props.onChange(!props.liked)}>
+        {props.liked ? "unlike" : "like"}
+    </button>
 }

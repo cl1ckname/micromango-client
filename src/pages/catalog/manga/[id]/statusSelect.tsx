@@ -42,6 +42,7 @@ export default function StatusSelect(props: {
     }}>
         {STATUS_LIST.map((e, i) =>
             <option
+                key={i}
                 value={i}>{e}</option>
         )}
     </select>

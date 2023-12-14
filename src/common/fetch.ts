@@ -4,11 +4,12 @@ export async function fetchJson<P, R>(url: string, method: HttpMethod, body?: P)
     if (body) {
         bs = JSON.stringify(body)
     }
+    const headers = new Headers({
+        "Content-Type": "application/json"
+    })
     const res = await fetch(url, {
         method,
-        headers: new Headers({
-            "Content-Type": "application/json"
-        }),
+        headers,
         body: bs,
         credentials: "include"
     })

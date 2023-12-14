@@ -8,6 +8,8 @@ export interface MangaResponse {
     list?: number
     genres: number[]
     listStats: Record<number, number>
+    likes: number
+    liked: boolean
 }
 
 export interface MangaEditProperties {
