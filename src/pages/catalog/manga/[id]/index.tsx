@@ -7,6 +7,7 @@ import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
 import {fetchJson, fetchOr404, HttpMethod} from "@/common/fetch";
 import {STATUS_LIST} from "@/dto/profile";
 import {useState} from "react";
+import StarRating from "@/pages/catalog/manga/[id]/starRating";
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
@@ -34,11 +35,15 @@ export default function MangaPreview(props: MangaResponse) {
         return fetchJson(`${HOST}/api/activity/manga/${props.mangaId}/like`, method)
     }
 
+    async function handleRate(rate: number) {
+        return fetchJson(`${HOST}/api/activity/manga/${props.mangaId}/rate`, "POST", {rate})
+    }
+
     return <div className="my-4 border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
         <a href="/catalog">To catalog</a>
         <div className="flex justify-between">
             <h1 className="text-3xl font-bold leading-9 sm:text-4xl sm:leading-tight">{props.title}</h1>
-            <p className="text-xl font-bold">+{props.likes || 0}</p>
+            <p className="text-xl font-bold">+{props.likes || 0}, &#9733; {props.rate.rate} ({props.rate.voters})</p>
         </div>
         <h3 className="">{props.createdAt}</h3>
         <div className="flex justify-items-center w-full">
@@ -57,6 +62,7 @@ export default function MangaPreview(props: MangaResponse) {
                     </button>
                 </a>
                 <LikeButton liked={liked} onChange={handleLike}/>
+                <StarRating value={props.rate.rate} onChange={handleRate} voters={props.rate.voters || 0}/>
                 <StatusSelect mangaId={props.mangaId} status={props.list}/>
             </div>
             <div className="grow">

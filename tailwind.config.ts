@@ -23,6 +23,9 @@ const config: Config = {
     {
       pattern: /bg-(.*)-(.*)/,
     },
+    {
+      pattern: /text-(.*)-(.*)/
+    }
   ],
   plugins: [],
 }

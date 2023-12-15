@@ -10,6 +10,12 @@ export interface MangaResponse {
     listStats: Record<number, number>
     likes: number
     liked: boolean
+    rate: Rate
+}
+
+export interface Rate {
+    rate: number,
+    voters: number
 }
 
 export interface MangaEditProperties {
