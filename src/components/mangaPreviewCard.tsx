@@ -3,6 +3,11 @@ import {MangaPreviewResponse} from "@/dto/catalog";
 export function MangaPreviewCard(props: MangaPreviewResponse) {
     return <div
         className="rounded-lg border border-gray-100 bg-white shadow-md">
+        <div className="relative">
+            <div className="absolute bg-green-800 text-white w-[3em] left-[-5px] top-1 rounded-lg">
+                {props.rate.toFixed(1)}
+            </div>
+        </div>
         <a href={"catalog/manga/" + props.mangaId}>
             <img className="object-cover" src={props.cover} alt="product image"/>
         </a>

@@ -30,6 +30,7 @@ export interface MangaPreviewResponse {
     mangaId: string
     title: string
     cover: string
+    rate: number
 }
 
 export interface MangaContentResponse {
