@@ -43,7 +43,7 @@ export default function MangaPreview(props: MangaResponse) {
         <a href="/catalog">To catalog</a>
         <div className="flex justify-between">
             <h1 className="text-3xl font-bold leading-9 sm:text-4xl sm:leading-tight">{props.title}</h1>
-            <p className="text-xl font-bold">+{props.likes || 0}, &#9733; {props.rate.rate} ({props.rate.voters})</p>
+            <p className="text-xl font-bold">+{props.likes || 0}, &#9733; {props.rate.rate.toFixed(1)} ({props.rate.voters})</p>
         </div>
         <h3 className="">{props.createdAt}</h3>
         <div className="flex justify-items-center w-full">
@@ -62,7 +62,7 @@ export default function MangaPreview(props: MangaResponse) {
                     </button>
                 </a>
                 <LikeButton liked={liked} onChange={handleLike}/>
-                <StarRating value={props.rate.rate} onChange={handleRate} voters={props.rate.voters || 0}/>
+                <StarRating value={props.userRate || 0} onChange={handleRate}/>
                 <StatusSelect mangaId={props.mangaId} status={props.list}/>
             </div>
             <div className="grow">

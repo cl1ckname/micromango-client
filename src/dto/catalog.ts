@@ -11,6 +11,7 @@ export interface MangaResponse {
     likes: number
     liked: boolean
     rate: Rate
+    userRate?: number
 }
 
 export interface Rate {

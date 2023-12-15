@@ -2,7 +2,6 @@ import {useState} from "react";
 
 export default function StarRating(props: {
     value: number
-    voters: number
     onChange: (rate: number) => any
 }) {
     const [hover, setHover] = useState(0);
@@ -31,7 +30,7 @@ export default function StarRating(props: {
                     </button>
                 );
             })}
-            ({props.voters})
+            ({props.value})
         </div>
     );
 };
