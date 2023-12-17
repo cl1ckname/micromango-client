@@ -10,13 +10,9 @@ export interface MangaResponse {
     listStats: Record<number, number>
     likes: number
     liked: boolean
-    rate: Rate
-    userRate?: number
-}
-
-export interface Rate {
     rate: number,
-    voters: number
+    rates: number,
+    userRate?: number
 }
 
 export interface MangaEditProperties {
@@ -75,6 +71,7 @@ export interface Genre {
     title: string
     className: string
 }
+
 export const GENRES: Record<number, Genre> = {
     1: {title: 'Action', className: "bg-red-200"},
     2: {title: 'Adventure', className: "bg-cyan-400"},

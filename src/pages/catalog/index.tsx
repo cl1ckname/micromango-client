@@ -22,7 +22,11 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         url += "?" + q.join("&")
     }
     const res = await fetchOr404<MangaPreviewResponse[]>(url, auth)
-    return {props: {catalog: res || []}}
+    const resWithRate = res?.map(m => {
+        m.rate = m.rate || 0
+        return m
+    })
+    return {props: {catalog: resWithRate || []}}
 }
 
 function parseQueryIntArr(genre: string | string[] | undefined) {
