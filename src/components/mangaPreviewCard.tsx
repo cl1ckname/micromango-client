@@ -2,7 +2,7 @@ import {MangaPreviewResponse} from "@/dto/catalog";
 
 export function MangaPreviewCard(props: MangaPreviewResponse) {
     return <div
-        className="rounded-lg border border-gray-100 bg-white shadow-md">
+        className="rounded-lg border border-gray-100 bg-white shadow-md" key={props.mangaId}>
         <div className="relative">
             <div className="absolute bg-green-800 text-white w-[3em] left-[-5px] top-1 rounded-lg">
                 {props.rate.toFixed(1)}

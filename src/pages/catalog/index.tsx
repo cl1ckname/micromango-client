@@ -6,6 +6,7 @@ import {MangaPreviewCard} from "@/components/mangaPreviewCard";
 import GenrePick from "@/components/genrePickForm";
 import {useRouter} from "next/router";
 import {useState, KeyboardEvent} from "react";
+import OrderSelect from "@/pages/catalog/manga/[id]/orderSelect";
 
 interface HomeProps {
     catalog: MangaPreviewResponse[]
@@ -93,12 +94,12 @@ export default function Home(props: HomeProps) {
 
     return (
         <main className="min-h-screen mx-5">
-            <div className="flex flex-row justify-between">
-                <h1 className="text-3xl">Catalog</h1>
-                <a href="/catalog/add">Add manga</a>
-            </div>
             <div className="grid grid-cols-6 gap-5">
                 <div className="col-span-5">
+                    <div className="flex flex-row justify-between flex-grow">
+                        <h1 className="text-3xl">Catalog</h1>
+                        <OrderSelect/>
+                    </div>
                     <QueryInput value={starts} onChange={handleTitleEnter}/>
                     <div className="grid grid-cols-5 gap-20">
                         {props.catalog.map(MangaPreviewCard)}

@@ -17,7 +17,6 @@ export default function GenrePick(props: {
         }
     }
 
-    console.log("g", props.value)
     return <ul>
         {Object.values(GENRES).map((i, ind) => <li key={i.title}>
             <span>
