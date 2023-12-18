@@ -3,7 +3,6 @@ import {HOST} from "@/app/globals";
 import {Profile, ProfileEncoded} from "@/dto/user";
 import {fetchOr404} from "@/common/fetch";
 import {useRouter} from "next/router";
-import {MenuBar} from "@/pages/profile/[userId]/menuBar";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId  = context.query.userId as string | undefined
@@ -72,7 +71,7 @@ export default function ProfilePage(props: ProfileEncoded) {
                             <svg className="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                         </span>
                         <span className="tracking-wide">About</span>
@@ -118,12 +117,18 @@ export default function ProfilePage(props: ProfileEncoded) {
                     <button
                         className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4"
                         onClick={_ => router.push(`/profile/${props.userId}/edit`)}
-                    >Edit profile</button>
+                    >Edit profile
+                    </button>
+                    <button
+                        className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4"
+                        onClick={_ => router.push(`/profile/${props.userId}/list`)}
+                    >Manga list
+                    </button>
                 </div>
                 <div className="my-4"></div>
-                <div className="bg-white p-3 shadow-sm rounded-sm min-h-[30vh]">
-                    <MenuBar userId={props.userId}/>
-                </div>
+                {/*<div className="bg-white p-3 shadow-sm rounded-sm min-h-[30vh]">*/}
+                {/*    <MenuBar userId={props.userId}/>*/}
+                {/*</div>*/}
             </div>
         </div>
     </div>
