@@ -18,6 +18,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         return {notFound: true}
     }
     res.genres = res.genres || []
+    res.listStats = res.listStats || {}
     return {props: res};
 }
 
@@ -43,7 +44,7 @@ export default function MangaPreview(props: MangaResponse) {
         <a href="/catalog">To catalog</a>
         <div className="flex justify-between">
             <h1 className="text-3xl font-bold leading-9 sm:text-4xl sm:leading-tight">{props.title}</h1>
-            <p className="text-xl font-bold">+{props.likes || 0}, &#9733; {props.rate.toFixed(1)} ({props.rates})</p>
+            <p className="text-xl font-bold">+{props.likes || 0}, &#9733; {(props.rate || 0).toFixed(1)} ({props.rates})</p>
         </div>
         <h3 className="">{props.createdAt}</h3>
         <div className="flex justify-items-center w-full">
@@ -99,7 +100,7 @@ function DescriptionTab(props: {
 }
 
 function ListStats(props: Record<number, number>) {
-    const sum = Object.values(props).reduce((i,j) => i+j)
+    const sum = Object.values(props).reduce((i,j) => i+j, 0)
     return <div>
         In lists: {sum}
         <ul>
