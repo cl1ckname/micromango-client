@@ -1,28 +1,20 @@
 import {GetServerSidePropsContext} from "next";
-import {fetchOr404} from "@/common/fetch";
-import {Profile, ProfileEncoded} from "@/dto/user";
-import {HOST} from "@/app/globals";
+import {ProfileEncoded} from "@/dto/user";
 import {useEffect, useState} from "react";
 import {ListRecord, ListResponse} from "@/dto/profile";
+import {GetLists, GetProfile} from "@/api/profile";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId = context.query.userId as string | undefined
     if (!userId) {
         return {notFound: true}
     }
-    const res = await fetchOr404<Profile>(`${HOST}/api/profile/${userId}`)
+    const res = await GetProfile(userId)
     if (!res) {
         return {notFound: true}
     }
-    let profile: ProfileEncoded | null
-    try {
-        profile = {...res, bio: JSON.parse(res.bio)}
-    } catch (e) {
-        console.warn(e)
-        profile = {...res, bio: {gender: "Other", status: "", description: ""}}
-    }
     return {
-        props: profile
+        props: res
     }
 }
 
@@ -30,8 +22,7 @@ export default function ListPage(props: ProfileEncoded) {
     let [list, setList] = useState<ListResponse | null>(null)
 
     async function fetchLists() {
-        const url = `${HOST}/api/profile/${props.userId}/list`
-        const list = await fetchOr404<ListResponse>(url)
+        const list = await GetLists(props.userId)
         if (!list) {
             return
         }

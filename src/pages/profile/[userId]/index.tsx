@@ -1,28 +1,19 @@
 import {GetServerSidePropsContext} from "next";
-import {HOST} from "@/app/globals";
-import {Profile, ProfileEncoded} from "@/dto/user";
-import {fetchOr404} from "@/common/fetch";
+import {ProfileEncoded} from "@/dto/user";
 import {useRouter} from "next/router";
+import {GetProfile} from "@/api/profile";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId  = context.query.userId as string | undefined
     if (!userId) {
         return {notFound: true}
     }
-    const res = await fetchOr404<Profile>(`${HOST}/api/profile/${userId}`)
+    const res = await GetProfile(userId)
     if (!res) {
         return {notFound: true}
     }
-    let profile: ProfileEncoded | null
-    try {
-        profile = {...res, bio:  JSON.parse(res.bio)}
-    }
-    catch (e) {
-        console.warn(e)
-        profile = {...res, bio: {gender: "Other", status: "", description: ""}}
-    }
     return {
-        props: profile
+        props: res
     }
 }
 export default function ProfilePage(props: ProfileEncoded) {
@@ -43,7 +34,7 @@ export default function ProfilePage(props: ProfileEncoded) {
                         </span>
                         <span>{props.username}</span>
                     </div>
-                    <img src={HOST + "/static/" + props.picture} alt={"upload pic"}/>
+                    <img src={props.picture} alt={"upload pic"}/>
                 </div>
                 <div className="bg-white p-3 border-t-4 border-green-400">
                     <h1 className="text-gray-900 font-bold text-semibold leading-8 my-1">{props.bio.status}</h1>
@@ -126,9 +117,6 @@ export default function ProfilePage(props: ProfileEncoded) {
                     </button>
                 </div>
                 <div className="my-4"></div>
-                {/*<div className="bg-white p-3 shadow-sm rounded-sm min-h-[30vh]">*/}
-                {/*    <MenuBar userId={props.userId}/>*/}
-                {/*</div>*/}
             </div>
         </div>
     </div>

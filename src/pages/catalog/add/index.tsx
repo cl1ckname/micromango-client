@@ -1,14 +1,11 @@
-import {ChangeEvent, FormEvent, useState} from "react";
-import {MangaEditProperties, MangaResponse} from "@/dto/catalog";
+import {FormEvent, useState} from "react";
+import {MangaEditProperties} from "@/dto/catalog";
 import {useRouter} from "next/router";
-import {HOST} from "@/app/globals";
-import {fetchFormData} from "@/common/fetch";
 import {notFound} from "next/navigation";
-import GenrePick from "@/components/genrePickForm";
-import GenreList from "@/components/genreListForm";
 import MangaEdit from "@/components/mangaEdit";
+import {AddManga} from "@/api/catalog";
 
-export default function AddManga() {
+export default function CreateManga() {
     const router = useRouter()
     const [manga, setManga] = useState<MangaEditProperties>({
         genres: [],
@@ -18,14 +15,7 @@ export default function AddManga() {
 
     const createManga = async (e: FormEvent) => {
         e.preventDefault()
-        const formData = new FormData()
-        formData.append("title", manga.title)
-        formData.append("genres", Object.values(manga.genres).join(","))
-        formData.append("description", manga.description)
-        if (manga.cover) {
-            formData.append("cover", manga.cover, manga.cover.name)
-        }
-        const res = await fetchFormData<MangaResponse>(HOST + "/api/catalog", "POST", formData)
+        const res = await AddManga(manga)
         if (!res) {
             notFound()
         }

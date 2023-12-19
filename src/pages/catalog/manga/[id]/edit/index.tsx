@@ -1,14 +1,14 @@
-import {Chapter, ChapterHead, MangaEditProperties, MangaResponse, PostChapter} from "@/dto/catalog";
+import {ChapterHead, MangaEditProperties, MangaResponse} from "@/dto/catalog";
 import {GetServerSidePropsContext} from "next";
-import {HOST} from "@/app/globals";
 import {FormEvent, useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
 import MangaEdit from "@/components/mangaEdit";
+import {DeleteManga, GetManga, UpdateManga} from "@/api/catalog";
+import AddChapter from "@/api/reading";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
-    const res = await fetchOr404<MangaResponse>(HOST + "/api/catalog/" + id);
+    const res = await GetManga(id as string)
     if (!res) {
         return {notFound: true}
     }
@@ -35,11 +35,7 @@ export default function EditManga(props: MangaResponse) {
     async function addChapter(e: FormEvent) {
         e.preventDefault()
         e.stopPropagation()
-        const resp = await fetchJson<PostChapter, Chapter>(
-            HOST + "/api/content/" + props.mangaId + "/chapter",
-            "POST",
-            {title: chapterName, number: chapters.length + 1}
-        )
+        const resp = await AddChapter(props.mangaId, chapterName, chapters.length + 1)
         setChapters(prev => prev.concat([{
             title: resp.title,
             chapterId: resp.chapterId,
@@ -51,19 +47,12 @@ export default function EditManga(props: MangaResponse) {
 
     async function updatePreview(e: FormEvent) {
         e.preventDefault()
-        const formData = new FormData()
-        formData.append("genres", manga.genres.join(","))
-        formData.append("title", manga.title)
-        formData.append("description", manga.description)
-        if (manga.cover) {
-            formData.append("cover", manga.cover, manga.cover.name)
-        }
-        return fetchFormData(`${HOST}/api/catalog/${props.mangaId}`, "PUT", formData)
+        return UpdateManga(props.mangaId, {...manga})
     }
 
     async function deleteManga(e: FormEvent) {
         e.preventDefault()
-        await fetchJson(`${HOST}/api/catalog/${props.mangaId}`, "PUT")
+        await DeleteManga(props.mangaId)
         await router.push("/catalog")
     }
 

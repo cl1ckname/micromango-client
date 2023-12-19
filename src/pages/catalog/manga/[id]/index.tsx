@@ -1,24 +1,22 @@
 import {GetServerSidePropsContext} from "next";
 import {GENRES, MangaResponse} from "@/dto/catalog";
-import {HOST} from "@/app/globals";
 import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
 import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
 import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
-import {fetchJson, fetchOr404, HttpMethod} from "@/common/fetch";
 import {STATUS_LIST} from "@/dto/profile";
 import {useState} from "react";
 import StarRating from "@/pages/catalog/manga/[id]/starRating";
+import {GetManga} from "@/api/catalog";
+import {LikeManga, RateManga, UnlikeManga} from "@/api/profile";
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const {id} = ctx.query;
     const {auth} = ctx.req.cookies
-    const res = await fetchOr404<MangaResponse>(HOST + "/api/catalog/" + id, auth);
+    const res = await GetManga(id as string, auth);
     if (!res) {
         return {notFound: true}
     }
-    res.genres = res.genres || []
-    res.listStats = res.listStats || {}
     return {props: res};
 }
 
@@ -28,16 +26,14 @@ export default function MangaPreview(props: MangaResponse) {
 
     async function handleLike(v: boolean) {
         setLiked(v)
-        let method: HttpMethod = "DELETE"
-        if (v) {
-            method = "POST"
+        if (!v) {
+            return UnlikeManga(props.mangaId)
         }
-
-        return fetchJson(`${HOST}/api/activity/manga/${props.mangaId}/like`, method)
+        return LikeManga(props.mangaId)
     }
 
     async function handleRate(rate: number) {
-        return fetchJson(`${HOST}/api/activity/manga/${props.mangaId}/rate`, "POST", {rate})
+        return RateManga(props.mangaId, rate)
     }
 
     return <div className="my-4 border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">

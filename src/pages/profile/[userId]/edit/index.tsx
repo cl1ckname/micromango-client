@@ -1,9 +1,10 @@
 import {GetServerSidePropsContext} from "next";
-import {fetchFormData, fetchOr404} from "@/common/fetch";
-import {Profile, ProfileEncoded} from "@/dto/user";
+import {fetchFormData} from "@/common/fetch";
+import {ProfileEncoded} from "@/dto/user";
 import {HOST} from "@/app/globals";
 import {ChangeEvent, useState, MouseEvent} from "react";
 import {useRouter} from "next/router";
+import {GetProfile} from "@/api/profile";
 
 const inputClasses = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 
@@ -12,21 +13,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (!userId) {
         return {notFound: true}
     }
-    const res = await fetchOr404<Profile>(`${HOST}/api/profile/${userId}`)
+    const res = await GetProfile(userId)
     if (!res) {
         return {notFound: true}
     }
-
-    let profile: ProfileEncoded | null
-    try {
-        profile = {...res, bio:  JSON.parse(res.bio)}
-    }
-    catch (e) {
-        console.warn(e)
-        profile = {...res, bio: {gender: "Other", status: "", description: ""}}
-    }
     return {
-        props: profile
+        props: res
     }
 }
 export default function EditProfile(props: ProfileEncoded) {

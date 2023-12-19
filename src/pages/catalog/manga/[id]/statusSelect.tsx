@@ -1,10 +1,9 @@
 import {useEffect, useState} from "react";
-import {HOST} from "@/app/globals";
 import useAuth from "@/hooks/useAuth";
 import {Auth} from "@/dto/user";
 import {useRouter} from "next/router";
-import {fetchJson, HttpMethod} from "@/common/fetch";
-import {PostList, STATUS_LIST, UNKNOWN_INDEX} from "@/dto/profile";
+import {STATUS_LIST, UNKNOWN_INDEX} from "@/dto/profile";
+import {AddToList, RemoveFromList} from "@/api/profile";
 
 export default function StatusSelect(props: {
     mangaId: string
@@ -23,14 +22,10 @@ export default function StatusSelect(props: {
         if (!auth) {
             return router.push("/login")
         }
-        let method: HttpMethod = "POST"
         if (i == UNKNOWN_INDEX) {
-            method = "DELETE"
+            return RemoveFromList(auth.userId, props.mangaId)
         }
-        return await fetchJson<PostList, unknown>(`${HOST}/api/profile/${auth.userId}/list`, method, {
-                mangaId: props.mangaId,
-                list: i
-            })
+        return AddToList(auth.userId, props.mangaId, i)
     }
 
     return <select
