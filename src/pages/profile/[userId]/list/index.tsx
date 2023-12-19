@@ -1,8 +1,8 @@
 import {GetServerSidePropsContext} from "next";
 import {ProfileEncoded} from "@/dto/user";
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {ListRecord, ListResponse} from "@/dto/profile";
-import {GetLists, GetProfile} from "@/api/profile";
+import {GetLists, GetProfile, RateManga} from "@/api/profile";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId = context.query.userId as string | undefined
@@ -55,6 +55,14 @@ function ListTable(props: {
     const list = props.list || []
     list.sort((a, b) => (b.rate || 0) - (a.rate || 0))
 
+    function handleRate(mangaId: string) {
+        return function (e: ChangeEvent<HTMLInputElement>) {
+            const rate = Number.parseInt(e.target.value)
+            if (!isNaN(rate))
+                return RateManga(mangaId, rate)
+        }
+    }
+
     return <div className="w-full">
         <div className="flex justify-between bg-rose-200">
             <h1 className="text-xl">{props.title}</h1>
@@ -75,7 +83,7 @@ function ListTable(props: {
                         {r.title}
                     </a></td>
                     <td>
-                        <input value={r.rate} type="number" max="10" min="1"/>
+                        <input defaultValue={r.rate} type="number" max="10" min="1" onChange={handleRate(r.mangaId)}/>
                     </td>
                 </tr>))}
         </table>
