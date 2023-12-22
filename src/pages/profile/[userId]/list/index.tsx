@@ -20,7 +20,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function ListPage(props: ProfileEncoded) {
     let [list, setList] = useState<ListResponse | null>(null)
-
+    const [prefix, setPrefix] = useState("")
     async function fetchLists() {
         const list = await GetLists(props.userId)
         if (!list) {
@@ -38,21 +38,31 @@ export default function ListPage(props: ProfileEncoded) {
     }
 
     return <div className="container mx-auto my-5 p-5">
-        <div
-            style={{background: "url(\"https://cover.imglib.info/uploads/users/141436/f20b284b-ac02-4077-8bae-208b50a5d225.jpg\")"}}
-            className={"bg-cover box-border pt-[30%]"}></div>
-        <ListTable list={list[1]} title={"Reading"}/>
-        <ListTable list={list[2]} title={"To read"}/>
-        <ListTable list={list[3]} title={"Completed"}/>
-        <ListTable list={list[4]} title={"Drop"}/>
+        <h1 className="text-2xl">
+            <a href={`/profile/${props.userId}`} className="text-[0.5em]">← back</a> {props.username}
+        </h1>
+        <div className="w-full mb-5">
+            <div className="flex justify-between bg-rose-200">
+                <h1 className="text-xl">Search</h1>
+                <p>hide</p>
+            </div>
+            <input className="bg-gray-200 w-full"
+                   placeholder="Manga title" value={prefix} onChange={e => setPrefix(e.target.value)}/>
+        </div>
+        <ListTable list={list[1]} title={"Reading"} prefix={prefix}/>
+        <ListTable list={list[2]} title={"To read"} prefix={prefix}/>
+        <ListTable list={list[3]} title={"Completed"} prefix={prefix}/>
+        <ListTable list={list[4]} title={"Drop"} prefix={prefix}/>
     </div>
 }
 
 function ListTable(props: {
     list?: ListRecord[]
     title: string
+    prefix: string
 }) {
-    const list = props.list || []
+    let list = props.list || []
+    list = list.filter(r => r.title.toLowerCase().startsWith(props.prefix.toLowerCase()))
     list.sort((a, b) => (b.rate || 0) - (a.rate || 0))
 
     function handleRate(mangaId: string) {
@@ -66,7 +76,7 @@ function ListTable(props: {
     return <div className="w-full">
         <div className="flex justify-between bg-rose-200">
             <h1 className="text-xl">{props.title}</h1>
-            <p>hide</p>
+            <p>hide ({list.length})</p>
         </div>
         <table className="w-full">
             <thead>
