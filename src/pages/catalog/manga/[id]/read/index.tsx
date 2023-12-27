@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {notFound} from "next/navigation";
 import ReadingLayout from "@/pages/catalog/manga/[id]/read/layout";
 import {fetchOr404} from "@/common/fetch";
+import {ReadChapter} from "@/api/profile";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id, chapter} = context.query;
@@ -24,6 +25,7 @@ export default function MangaView(props: MangaContentResponse) {
     const router = useRouter()
     const [page, setPage] = useState(1)
     const [chapter, setChapter] = useState<Chapter>()
+    const chapters = props.chapters.sort((a,b) => a.number - b.number)
 
     function nextPage() {
         router.query["page"] = page + 1 + ""
@@ -68,7 +70,7 @@ export default function MangaView(props: MangaContentResponse) {
             })
         }
         const chapterNumber = Number.parseInt(chapterNumberStr)
-        const chapterMeta = props.chapters[chapterNumber-1]
+        const chapterMeta = chapters[chapterNumber-1]
         if (!chapterMeta) {
             notFound()
         }
@@ -81,8 +83,7 @@ export default function MangaView(props: MangaContentResponse) {
         })
     }, [router]);
 
-
-    useEffect(() => {
+    async function handlePage() {
         if (!chapter) {
             return
         }
@@ -93,27 +94,32 @@ export default function MangaView(props: MangaContentResponse) {
         const chapterNumber = Number.parseInt(chapterNumberStr)
         const pageNumberStr = router.query["page"] as string
         if (!pageNumberStr) {
-            setPageAndChapter(chapterNumber, 1)
+            await setPageAndChapter(chapterNumber, 1)
         }
         const pageNumber = Number.parseInt(pageNumberStr)
         if (pageNumber > chapter.pages.length) {
-            if (props.chapters.length > chapterNumber) {
-                setPageAndChapter(chapterNumber + 1, 1)
+            await ReadChapter(chapter.chapterId)
+            if (chapters.length > chapterNumber) {
+                await setPageAndChapter(chapterNumber + 1, 1)
             } else {
-                router.push(`/catalog/manga/${props.mangaId}`)
+                await router.push(`/catalog/manga/${props.mangaId}`)
             }
         }
         if (pageNumber <= 0) {
             if (pageNumber < 0) {
-                setPageAndChapter(chapterNumber, chapter.pages.length)
+                await setPageAndChapter(chapterNumber, chapter.pages.length)
             }
             if (chapterNumber > 1) {
-                setPageAndChapter(chapterNumber -1, -1)
+                await setPageAndChapter(chapterNumber -1, -1)
             } else {
-                router.push(`/catalog/manga/${props.mangaId}`)
+                await router.push(`/catalog/manga/${props.mangaId}`)
             }
         }
         setPage(pageNumber)
+    }
+
+    useEffect(() => {
+        handlePage()
     }, [router, page]);
 
     async function keyboardHandler(e: KeyboardEvent) {

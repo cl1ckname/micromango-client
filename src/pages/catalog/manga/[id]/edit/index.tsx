@@ -32,6 +32,7 @@ export default function EditManga(props: MangaResponse) {
     }, [manga.cover]);
 
     const router = useRouter()
+
     async function addChapter(e: FormEvent) {
         e.preventDefault()
         e.stopPropagation()
@@ -40,6 +41,7 @@ export default function EditManga(props: MangaResponse) {
             title: resp.title,
             chapterId: resp.chapterId,
             number: resp.number,
+            pages: resp.pages.length,
             createdAt: resp.createdAt
         }]))
         setChapterName("")
@@ -132,25 +134,38 @@ export default function EditManga(props: MangaResponse) {
                                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                     Title
                                 </th>
+                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                    Pages
+                                </th>
+                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                    Creation date
+                                </th>
+                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"></th>
                             </tr>
                             </thead>
 
                             <tbody>
                             {chapters.sort((a, b) => b.number - a.number).map(c => <>
-                                <tr>
+                                    <tr>
 
-                                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1 text-left text-blueGray-700 ">
-                                        {c.number}
-                                    </th>
-                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1 ">
-                                        <a href={`/catalog/manga/${props.mangaId}/chapter/${c.chapterId}`}>
-                                            {c.title}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href={`/catalog/manga/${props.mangaId}/edit/${c.chapterId}`}>Edit</a>
-                                    </td>
-                                </tr>
+                                        <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1 text-left text-blueGray-700 ">
+                                            {c.number}
+                                        </th>
+                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1 ">
+                                            <a href={`/catalog/manga/${props.mangaId}/chapter/${c.chapterId}`}>
+                                                {c.title}
+                                            </a>
+                                        </td>
+                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1">
+                                            {c.pages || 0}
+                                        </td>
+                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1">
+                                            {c.createdAt}
+                                        </td>
+                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-l whitespace-nowrap p-1">
+                                            <a href={`/catalog/manga/${props.mangaId}/edit/${c.chapterId}`}>Edit</a>
+                                        </td>
+                                    </tr>
                                 </>
                             )}
                             </tbody>

@@ -35,6 +35,9 @@ export function ChapterTable(props: {
                                 Title
                             </th>
                             <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Pages
+                            </th>
+                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Published
                             </th>
                         </tr>
@@ -51,6 +54,9 @@ export function ChapterTable(props: {
                                     <a href={`/catalog/manga/${props.mangaId}/read?chapter=${c.number}`}>
                                         {c.title}
                                     </a>
+                                </td>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-1 ">
+                                    {c.pages}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-1 ">
                                     {c.createdAt}

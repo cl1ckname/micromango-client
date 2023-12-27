@@ -52,3 +52,7 @@ export function  UnlikeManga(mangaId: string) {
 export function RateManga(mangaId: string, rate: number) {
     return fetchJson(`${HOST}/api/activity/manga/${mangaId}/rate`, "POST", {rate})
 }
+
+export function ReadChapter(chapterId: string) {
+    return fetchJson(`${HOST}/api/activity/chapter/${chapterId}`, "POST")
+}

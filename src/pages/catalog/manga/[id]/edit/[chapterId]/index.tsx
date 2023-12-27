@@ -62,6 +62,7 @@ export default function EditChapter(props: Chapter) {
                 className="h-12 min-w-[12rem] rounded-lg border-emerald-500 indent-4 text-emerald-900 shadow-lg focus:outline-none focus:ring focus:ring-emerald-600"
                 type="file"
                 placeholder="Chapter title"
+                accept="image/png,image/jpg,image/webp,image/tiff"
                 onChange={e => {
                     if (e.target.files)
                         setFile(e.target.files[0])

@@ -38,6 +38,7 @@ export interface ChapterHead {
     chapterId: string
     number: number
     title: string
+    pages: number,
     createdAt: string
 }
 
