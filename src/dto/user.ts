@@ -25,6 +25,7 @@ export interface Profile {
     userId: string,
     username: string,
     picture: string,
+    cover: string,
     bio: string,
     createdAt: string
 }
@@ -39,6 +40,7 @@ export interface ProfileEncoded {
     userId: string,
     username: string,
     picture: string,
+    cover: string
     bio: ProfileBio,
     createdAt: string
 }

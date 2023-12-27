@@ -1,3 +1,5 @@
+import {ProfileBio} from "@/dto/user";
+
 export interface PostList {
     mangaId: string,
     list: number
@@ -12,4 +14,12 @@ export interface ListRecord {
     mangaId: string,
     title: string,
     rate?: number
+}
+
+export interface UpdateProfileDto {
+    userId: string,
+    username?: string,
+    bio?: ProfileBio,
+    picture: File | null,
+    cover: File | null
 }

@@ -16,11 +16,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         props: res
     }
 }
+
+function OptionalCover(props: { cover: string }) {
+    if (!props.cover) return <></>
+    return <div style={{background: `url("${props.cover}")`}} className={"bg-cover box-border pt-[30%]"}></div>;
+}
+
 export default function ProfilePage(props: ProfileEncoded) {
     const router = useRouter()
 
     return <div className="container mx-auto my-5 p-5">
-        <div style={{background: "url(\"https://cover.imglib.info/uploads/users/141436/f20b284b-ac02-4077-8bae-208b50a5d225.jpg\")"}} className={"bg-cover box-border pt-[30%]"}></div>
+        <OptionalCover cover={props.cover}/>
         <div className="md:flex no-wrap md:-mx-2 ">
             <div className="w-full md:w-3/12 md:mx-2">
                 <div className="bg-white p-3 hover:shadow">
@@ -29,7 +35,7 @@ export default function ProfilePage(props: ProfileEncoded) {
                             <svg className="h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
                         </span>
                         <span>{props.username}</span>

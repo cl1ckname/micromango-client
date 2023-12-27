@@ -1,5 +1,5 @@
-import {fetchJson, fetchOr404} from "@/common/fetch";
-import {ListResponse, PostList} from "@/dto/profile";
+import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
+import {ListResponse, PostList, UpdateProfileDto} from "@/dto/profile";
 import {HOST} from "@/app/globals";
 import {Profile, ProfileEncoded} from "@/dto/user";
 
@@ -25,6 +25,15 @@ export async function GetProfile(userId: string) {
         profile = {...res, bio: {gender: "Other", status: "", description: ""}}
     }
     return profile
+}
+
+export async function UpdateProfile(profile: UpdateProfileDto) {
+    const fd = new FormData()
+    if (profile.username) fd.append("username", profile.username)
+    if (profile.bio) fd.append("bio", JSON.stringify(profile.bio))
+    if (profile.picture) fd.set("picture", profile.picture, profile.picture.name)
+    if (profile.cover) fd.set("cover", profile.cover, profile.cover.name)
+    await fetchFormData(`${HOST}/api/profile/${profile.userId}`, "PUT", fd)
 }
 
 export function GetLists(userId: string) {
