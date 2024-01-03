@@ -1,11 +1,11 @@
 import {GetServerSidePropsContext} from "next";
 import {GENRES, MangaResponse} from "@/dto/catalog";
-import {ChapterTable} from "@/pages/catalog/manga/[id]/chapterTable";
-import {Tabs} from "@/pages/catalog/manga/[id]/previewTabs";
-import StatusSelect from "@/pages/catalog/manga/[id]/statusSelect";
+import ChapterTable from "@/components/chapterTable";
+import Tabs from "@/components/previewTabs";
+import StatusSelect from "@/components/statusSelect";
 import {STATUS_LIST} from "@/dto/profile";
 import {useState} from "react";
-import StarRating from "@/pages/catalog/manga/[id]/starRating";
+import StarRating from "@/components/starRating";
 import {GetManga} from "@/api/catalog";
 import {LikeManga, RateManga, UnlikeManga} from "@/api/profile";
 

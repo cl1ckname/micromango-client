@@ -6,7 +6,7 @@ import {MangaPreviewCard} from "@/components/mangaPreviewCard";
 import GenrePick from "@/components/genrePickForm";
 import {useRouter} from "next/router";
 import {useState, KeyboardEvent} from "react";
-import OrderSelect from "@/pages/catalog/manga/[id]/orderSelect";
+import OrderSelect from "@/components/orderSelect";
 
 interface HomeProps {
     catalog: MangaPreviewResponse[]

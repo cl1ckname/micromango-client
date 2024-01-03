@@ -1,6 +1,6 @@
 import {ReactNode, useState} from "react";
 
-export function Tabs(props: {
+export default function Tabs(props: {
     description: ReactNode,
     chapter: ReactNode
 }) {

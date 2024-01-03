@@ -1,6 +1,6 @@
 import {ChapterHead} from "@/dto/catalog";
 
-export function ChapterTable(props: {
+export default function ChapterTable(props: {
     mangaId: string,
     chapterHeads: ChapterHead[],
 }) {
