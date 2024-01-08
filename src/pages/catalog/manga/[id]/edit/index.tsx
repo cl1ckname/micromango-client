@@ -25,12 +25,12 @@ export default function EditManga(props: MangaResponse) {
         genres: props.genres,
         description: props.description
     })
-    const [cover, setCover] = useState(props.cover)
+    const [thumbnail, setThumbnail] = useState(props.thumbnail)
 
     useEffect(() => {
-        if (manga.cover)
-            setCover(URL.createObjectURL(manga.cover))
-    }, [manga.cover]);
+        if (manga.thumbnail)
+            setThumbnail(URL.createObjectURL(manga.thumbnail))
+    }, [manga.thumbnail]);
 
     const router = useRouter()
 
@@ -63,7 +63,7 @@ export default function EditManga(props: MangaResponse) {
     return <>
         <div className="bg-gray-100 flex justify-center items-center h-screen">
             <div className="w-1/2 h-screen hidden lg:block">
-                <img src={cover} alt="Placeholder Image" className="object-cover w-full h-full"/>
+                <img src={thumbnail} alt="Placeholder Image" className="object-cover w-full h-full"/>
             </div>
             <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
                 <input

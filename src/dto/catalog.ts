@@ -18,7 +18,7 @@ export interface MangaResponse {
 
 export interface MangaEditProperties {
     title: string
-    cover?: File
+    thumbnail?: File
     description: string
     genres: number[]
 }

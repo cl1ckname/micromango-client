@@ -17,13 +17,15 @@ export function AddManga(manga: MangaEditProperties) {
     formData.append("title", manga.title)
     formData.append("genres", Object.values(manga.genres).join(","))
     formData.append("description", manga.description)
-    if (manga.cover) {
-        formData.append("cover", manga.cover, manga.cover.name)
+    if (manga.thumbnail) {
+        formData.append("cover", manga.thumbnail, manga.thumbnail.name)
     }
     return fetchFormData<MangaResponse>(HOST + "/api/catalog", "POST", formData)
 }
 
-export async function UpdateManga(id: string, manga: Partial<Omit<MangaResponse, "mangaId" | "cover"> & {cover: File}>) {
+type MangaUpdates = Partial<Omit<MangaResponse, "mangaId" | "thumbnail"> & {thumbnail: File}>
+
+export async function UpdateManga(id: string, manga: MangaUpdates) {
     const formData = new FormData()
     if (manga.genres)
         formData.append("genres", manga.genres.join(","))
@@ -31,8 +33,8 @@ export async function UpdateManga(id: string, manga: Partial<Omit<MangaResponse,
         formData.append("title", manga.title)
     if (manga.description)
         formData.append("description", manga.description)
-    if (manga.cover) {
-        formData.append("thumbnail", manga.cover, manga.cover.name)
+    if (manga.thumbnail) {
+        formData.append("thumbnail", manga.thumbnail, manga.thumbnail.name)
     }
     return fetchFormData<MangaResponse>(`${HOST}/api/catalog/${id}`, "PUT", formData)
 }

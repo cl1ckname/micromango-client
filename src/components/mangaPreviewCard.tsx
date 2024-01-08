@@ -1,4 +1,6 @@
 import {MangaPreviewResponse} from "@/dto/catalog";
+import ImageDefault from "./imageDefault";
+import { DEFAULT_MANGA_THUMB } from "@/app/globals";
 
 export function MangaPreviewCard(props: MangaPreviewResponse) {
     return <div
@@ -9,7 +11,7 @@ export function MangaPreviewCard(props: MangaPreviewResponse) {
             </div>
         </div>
         <a href={"catalog/manga/" + props.mangaId}>
-            <img className="object-cover" src={props.thumbnail} alt="product image"/>
+            <ImageDefault src={props.thumbnail} default={DEFAULT_MANGA_THUMB}/>
         </a>
         <a href={"catalog/manga/" + props.mangaId}>
             <h5 className="text-xl tracking-tight text-slate-900">{props.title}</h5>
