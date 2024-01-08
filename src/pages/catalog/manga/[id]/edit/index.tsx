@@ -5,6 +5,7 @@ import {useRouter} from "next/router";
 import MangaEdit from "@/components/mangaEdit";
 import {DeleteManga, GetManga, UpdateManga} from "@/api/catalog";
 import AddChapter from "@/api/reading";
+import { redirect } from "next/navigation";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;
@@ -49,7 +50,8 @@ export default function EditManga(props: MangaResponse) {
 
     async function updatePreview(e: FormEvent) {
         e.preventDefault()
-        return UpdateManga(props.mangaId, {...manga})
+        await UpdateManga(props.mangaId, {...manga})
+        await router.replace(`/catalog/manga/${props.mangaId}`)
     }
 
     async function deleteManga(e: FormEvent) {

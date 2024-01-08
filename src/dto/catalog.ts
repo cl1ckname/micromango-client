@@ -1,6 +1,7 @@
 export interface MangaResponse {
     mangaId: string
     title: string
+    thumbnail: string
     cover: string
     description: string
     content: MangaContentResponse
@@ -25,7 +26,7 @@ export interface MangaEditProperties {
 export interface MangaPreviewResponse {
     mangaId: string
     title: string
-    cover: string
+    thumbnail: string
     rate: number
 }
 

@@ -1,5 +1,5 @@
 import {fetchFormData, fetchJson, fetchOr404} from "@/common/fetch";
-import {MangaEditProperties, MangaResponse} from "@/dto/catalog";
+import {MangaEditProperties, MangaPreviewResponse, MangaResponse} from "@/dto/catalog";
 import {HOST} from "@/app/globals";
 
 export async function GetManga(id: string, auth?: string) {
@@ -32,11 +32,15 @@ export async function UpdateManga(id: string, manga: Partial<Omit<MangaResponse,
     if (manga.description)
         formData.append("description", manga.description)
     if (manga.cover) {
-        formData.append("cover", manga.cover, manga.cover.name)
+        formData.append("thumbnail", manga.cover, manga.cover.name)
     }
     return fetchFormData<MangaResponse>(`${HOST}/api/catalog/${id}`, "PUT", formData)
 }
 
 export async function DeleteManga(id: string) {
     return fetchJson(`${HOST}/api/catalog/${id}`, "DELETE")
+}
+
+export async function GetMangaUpdates(): Promise<MangaPreviewResponse[]> {
+    return fetchOr404<MangaPreviewResponse[]>(`${HOST}/api/feed/updates`).then(r => r || [])
 }
