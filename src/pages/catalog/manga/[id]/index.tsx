@@ -103,7 +103,7 @@ function ListStats(props: Record<number, number>) {
             {STATUS_LIST.map((k, i) =>
                 <li key={k}>
                     {k} - {props[i] || 0}: {((props[i] || 0) / sum)
-                    .toLocaleString(undefined, {style: "percent", minimumFractionDigits: 2})}
+                    .toLocaleString("en-US", {style: "percent", minimumFractionDigits: 2, })}
                 </li>
             )}
         </ul>
