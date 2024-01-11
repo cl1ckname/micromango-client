@@ -151,7 +151,7 @@ export default function MangaView(props: MangaContentResponse) {
         />
         <img
             alt={"not found"}
-            src={chapter?.pages[page - 1]?.image}
+            src={HOST + chapter?.pages[page - 1]?.image}
             width="1500"
             className="mx-auto"
         />

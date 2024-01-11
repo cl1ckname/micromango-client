@@ -8,6 +8,7 @@ import {useState} from "react";
 import StarRating from "@/components/starRating";
 import {GetManga} from "@/api/catalog";
 import {LikeManga, RateManga, UnlikeManga} from "@/api/profile";
+import { HOST } from "@/app/globals";
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
@@ -45,7 +46,7 @@ export default function MangaPreview(props: MangaResponse) {
         <h3 className="">{props.createdAt}</h3>
         <div className="flex justify-items-center w-full">
             <div className="min-w-fit pr-2">
-                <img src={props.thumbnail} alt={props.thumbnail} width="240" height="320"/>
+                <img src={HOST + props.thumbnail} alt={props.thumbnail} width="240" height="320"/>
                 <a href={`/catalog/manga/${props.mangaId}/read?chapter=1&page=1`}>
                     <button
                         className="bg-indigo-500 text-white active:bg-indigo-600 text-m font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 w-full mt-1"

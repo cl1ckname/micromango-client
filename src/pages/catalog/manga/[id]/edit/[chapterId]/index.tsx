@@ -95,7 +95,7 @@ export default function EditChapter(props: Chapter) {
                 </td>
                 <td>
                     <a href={p.image} target="_blank">
-                        <img src={p.image} alt={p.image} width="100"/>
+                        <img src={HOST + p.image} alt={p.image} width="100"/>
                     </a>
                 </td>
             </tr>)}

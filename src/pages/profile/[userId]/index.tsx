@@ -3,7 +3,7 @@ import {ProfileEncoded} from "@/dto/user";
 import {useRouter} from "next/router";
 import {GetProfile} from "@/api/profile";
 import ImageDefault from "@/components/imageDefault";
-import { DEFAULT_PROFILE_PIC } from "@/app/globals";
+import { DEFAULT_PROFILE_PIC, HOST } from "@/app/globals";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userId  = context.query.userId as string | undefined
@@ -42,7 +42,7 @@ export default function ProfilePage(props: ProfileEncoded) {
                         </span>
                         <span>{props.username}</span>
                     </div>
-                    <ImageDefault src={props.picture} default={DEFAULT_PROFILE_PIC}/>
+                    <ImageDefault src={HOST + props.picture} default={DEFAULT_PROFILE_PIC}/>
                 </div>
                 <div className="bg-white p-3 border-t-4 border-green-400">
                     <h1 className="text-gray-900 font-bold text-semibold leading-8 my-1">{props.bio.status}</h1>
