@@ -5,7 +5,6 @@ import {useRouter} from "next/router";
 import MangaEdit from "@/components/mangaEdit";
 import {DeleteManga, GetManga, UpdateManga} from "@/api/catalog";
 import AddChapter from "@/api/reading";
-import { redirect } from "next/navigation";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {id} = context.query;

@@ -21,7 +21,7 @@ export default function MangaEdit(props: {
             return
         }
         const file = fileList[0]
-        props.onChange({...props.manga, cover: file})
+        props.onChange({...props.manga, thumbnail: file})
     }
 
     function handleCheck(genres: number[]) {
