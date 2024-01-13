@@ -27,9 +27,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-ARG API=http://localhost:8080
-ENV NEXT_PUBLIC_SERVER_ADDR=$API
-
 RUN yarn build
 
 # If using npm comment out above and use below instead
